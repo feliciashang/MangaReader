@@ -16,7 +16,7 @@ struct HomeView: View {
             NavigationStack { //not having this will have the toolbar colours back
                 VStack {
                     if selectedView == 1 {
-                        LibraryView(viewModel: viewModel).frame(minHeight: reader.size.height-50)
+                        LibraryView(viewModel: viewModel).frame(maxHeight: .infinity)
                     } else if selectedView == 2 {
                         UpdatesView().frame(maxHeight: .infinity)
                     } else if selectedView == 3 {

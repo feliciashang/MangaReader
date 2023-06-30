@@ -11,6 +11,8 @@ struct ContentView: View {
    
     let comic: Model.Comic
     @ObservedObject var viewModel: LibraryViewModel
+    @State private var steadyStateZoomScale: CGFloat = 1
+    @GestureState private var gestureZoomScale: CGFloat = 1
     
     let defaultButtonSize: CGFloat = 20
     var body: some View {
@@ -24,13 +26,32 @@ struct ContentView: View {
         
         
         GeometryReader { geo in
-            ScrollView {
-               Group {
-                   Image(comic.content).resizable()
-                           .aspectRatio(contentMode: .fit)
-                }.frame(maxWidth: geo.size.width, minHeight: geo.size.height)
-            }
+            ZStack {
+                ScrollView {
+                    Group {
+                        Image(comic.content).resizable()
+                            .aspectRatio(contentMode: .fit)
+                            
+                    }.frame(maxWidth: geo.size.width, minHeight: geo.size.height)
+                       
+                        
+                } .scaleEffect(zoomScale)
+            }.gesture(zoomGesture())
         }
+    }
+    
+    private var zoomScale: CGFloat {
+        steadyStateZoomScale * gestureZoomScale
+    }
+    
+    private func zoomGesture() -> some Gesture {
+        MagnificationGesture()
+            .updating($gestureZoomScale) { latestGestureScale, gestureZoomScale, transaction in
+                gestureZoomScale = latestGestureScale
+            }
+            .onEnded { gestureScaleAtEnd in
+                steadyStateZoomScale *= gestureScaleAtEnd
+            }
     }
 }
 
