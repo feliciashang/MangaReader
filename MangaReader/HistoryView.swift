@@ -34,10 +34,14 @@ struct timeView: View {
 //            Text(time)
             NavigationLink(destination: ContentView(comic: viewModel.findComic(chapterId: id), viewModel: viewModel), label: {
                 Text(time)
-                Text("Chapter: \(viewModel.findComic(chapterId: id).chapter)   Title: \(viewModel.findComic(chapterId: id).cover)")
+            //    Text("Chapter: \(viewModel.findComic(chapterId: id).chapter)   Title: \(viewModel.findComic(chapterId: id).cover)")
+                Text("Chapter: \(viewModel.findComic(chapterId: id).chapter)")
+                Image(viewModel.findComic(chapterId: id).cover)
+                    .resizable()
+                    .frame(maxWidth: 30, maxHeight: 45)
 
             })
-   //     }
+
     }
 }
 

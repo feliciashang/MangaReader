@@ -32,8 +32,8 @@ class LibraryViewModel: ObservableObject {
         return model.timestamps
     }
     
-    func choose(comic comic: Model.Comic) ->Void {
-        model.choose(comic: comic)
+    func choose(_ comic: Model.Comic) ->Void {
+        model.choose(comic)
     }
 //    func findChapter(cover cover: String) -> Model.Comic{
 //        return model.findComic(comicId: id)

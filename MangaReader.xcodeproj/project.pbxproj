@@ -51,12 +51,6 @@
 		3D0444E22A44FC5E005D7B83 = {
 			isa = PBXGroup;
 			children = (
-				3D04450A2A4CBD1D005D7B83 /* ComicDetailView.swift */,
-				3D0445082A4B67D2005D7B83 /* LibraryViewModel.swift */,
-				3D0445002A4A1EA5005D7B83 /* HomeView.swift */,
-				3D0445062A4A2A60005D7B83 /* UpdatesView.swift */,
-				3D0445042A4A284E005D7B83 /* HistoryView.swift */,
-				3D0445022A4A274F005D7B83 /* LibraryView.swift */,
 				3D0444ED2A44FC5E005D7B83 /* MangaReader */,
 				3D0444EC2A44FC5E005D7B83 /* Products */,
 			);
@@ -73,6 +67,12 @@
 		3D0444ED2A44FC5E005D7B83 /* MangaReader */ = {
 			isa = PBXGroup;
 			children = (
+				3D04450A2A4CBD1D005D7B83 /* ComicDetailView.swift */,
+				3D0445082A4B67D2005D7B83 /* LibraryViewModel.swift */,
+				3D0445002A4A1EA5005D7B83 /* HomeView.swift */,
+				3D0445062A4A2A60005D7B83 /* UpdatesView.swift */,
+				3D0445042A4A284E005D7B83 /* HistoryView.swift */,
+				3D0445022A4A274F005D7B83 /* LibraryView.swift */,
 				3D0444EE2A44FC5E005D7B83 /* MangaReaderApp.swift */,
 				3D0444F02A44FC5E005D7B83 /* ContentView.swift */,
 				3D0444FE2A4A0521005D7B83 /* UIScrollView.swift */,

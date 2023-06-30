@@ -46,7 +46,7 @@ struct Model {
         chapterList[comic]?.sort(by: >)
     }
     
-    mutating func choose(comic comic: Comic) {
+    mutating func choose(_ comic: Comic) {
         let date = Date()
         let df = DateFormatter()
         df.dateFormat = "yyyy-MM-dd HH:mm:ss"

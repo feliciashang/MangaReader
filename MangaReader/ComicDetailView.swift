@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ComicDetailView: View {
     var comic: String
-    
     @ObservedObject var viewModel: LibraryViewModel
     
     var body: some View {

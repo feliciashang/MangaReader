@@ -17,7 +17,7 @@ struct ContentView: View {
         VStack(spacing: 0) {
             documentBody
         }.frame(maxHeight: .infinity, alignment: .bottom)
-            .onDisappear(perform: {viewModel.choose(comic: comic)})
+            .onDisappear(perform: {viewModel.choose(comic)})
         
     }
     var documentBody: some View {
@@ -26,17 +26,8 @@ struct ContentView: View {
         GeometryReader { geo in
             ScrollView {
                Group {
-//                   if comic == "cover" {
                    Image(comic.content).resizable()
                            .aspectRatio(contentMode: .fit)
-//                   } else if comic == "endingmaker_cover" {
-//                       Image("ending_maker").resizable()
-//                           .aspectRatio(contentMode: .fit)
-                 //  }
-                
-//                        .resizable()
-//                        .aspectRatio(contentMode: .fit)
-                        
                 }.frame(maxWidth: geo.size.width, minHeight: geo.size.height)
             }
         }
