@@ -18,9 +18,9 @@ struct Model {
         chapterList = Dictionary<String, Array<Int>>()
         timestamps = Dictionary<Int, String>()
         
-        comics.append(Comic(id: 1, cover: "cover", chapter: 1, content: "manga"))
-        chapterList["cover"] = Array<Int>()
-        chapterList["cover"]?.append(1)
+        comics.append(Comic(id: 1, cover: "Cover", chapter: 1, content: "manga"))
+        chapterList["Cover"] = Array<Int>()
+        chapterList["Cover"]?.append(1)
         comics.append(Comic(id: 2, cover: "endingmaker_cover", chapter: 3, content: "endingmaker_3"))
         chapterList["endingmaker_cover"] = Array<Int>()
         chapterList["endingmaker_cover"]?.append(2)
@@ -39,7 +39,7 @@ struct Model {
             }
         }
         print("error")
-        return Comic(id: 1, cover: "cover", chapter: 1, content: "manga")
+        return Comic(id: 1, cover: "Cover", chapter: 1, content: "manga")
         
     }
     mutating func sortChapter(cover comic: String) {
@@ -54,6 +54,7 @@ struct Model {
         timestamps[comic.id] = dateString
         print(timestamps)
     }
+   
     
     struct Comic: Identifiable {
         var id: Int
