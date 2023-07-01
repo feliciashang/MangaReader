@@ -39,10 +39,10 @@ struct LibraryView: View {
     }
         var searchResults: [String] {
             if searchText.isEmpty {
-                return Array(viewModel.chapterList.keys)
+                return Array(viewModel.coverList)
             } else {
                 
-                return Array(viewModel.chapterList.keys).filter {
+                return Array(viewModel.coverList).filter {
                     $0.range(of: searchText, options: .caseInsensitive) != nil
                 }
             }

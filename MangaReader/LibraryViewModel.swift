@@ -23,13 +23,28 @@ class LibraryViewModel: ObservableObject {
         return model.chapterList
     }
     
+    var coverList: Array<String> {
+        var output = Array<String>()
+        for item in model.covers {
+            output.append(item.cover)
+        }
+        return output
+    }
+    
     func findComic(chapterId id: Int) -> Model.Comic{
         return model.findComic(comicId: id)
+    }
+    func findCover(_ cover: String) -> Model.Cover{
+        return model.findCover(cover)
     }
     
     var timestamps: Dictionary<Int, String> {
         print(model.timestamps)
         return model.timestamps
+    }
+    
+    var covers:Array<Model.Cover> {
+        return model.covers
     }
     
     func choose(_ comic: Model.Comic) ->Void {

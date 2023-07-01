@@ -46,7 +46,7 @@ struct ContentView: View {
     
     private func zoomGesture() -> some Gesture {
         MagnificationGesture()
-            .updating($gestureZoomScale) { latestGestureScale, gestureZoomScale, transaction in
+            .updating($gestureZoomScale) { latestGestureScale, gestureZoomScale, _ in
                 gestureZoomScale = latestGestureScale
             }
             .onEnded { gestureScaleAtEnd in
