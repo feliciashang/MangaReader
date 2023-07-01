@@ -53,7 +53,7 @@ struct coverView: View {
     let viewModel: LibraryViewModel
     let comic: String
     var body: some View {
-        NavigationLink(destination: ComicDetailView(comic: comic, viewModel: viewModel), label: {
+        NavigationLink(destination: ComicDetailView(comic: viewModel.findCover(comic), viewModel: viewModel), label: {
             Image(comic)
                 .renderingMode(.original)
                 .resizable()

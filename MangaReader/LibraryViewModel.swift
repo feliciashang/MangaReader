@@ -19,9 +19,9 @@ class LibraryViewModel: ObservableObject {
         return model.comics
     }
     
-    var chapterList: Dictionary<String, Array<Int>> {
-        return model.chapterList
-    }
+//    var chapterList: Dictionary<String, Array<Int>> {
+//        return model.chapterList
+//    }
     
     var coverList: Array<String> {
         var output = Array<String>()
