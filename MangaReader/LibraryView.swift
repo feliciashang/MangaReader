@@ -37,6 +37,8 @@ struct LibraryView: View {
                 }.padding(.horizontal)
             }
     }
+    
+    
         var searchResults: [String] {
             if searchText.isEmpty {
                 return Array(viewModel.coverList)
@@ -52,13 +54,19 @@ struct LibraryView: View {
 struct coverView: View {
     let viewModel: LibraryViewModel
     let comic: String
+    
+    let folderViewModel: FolderViewModel = FolderViewModel()
+    
     var body: some View {
         NavigationLink(destination: ComicDetailView(comic: viewModel.findCover(comic), viewModel: viewModel), label: {
             Image(comic)
                 .renderingMode(.original)
                 .resizable()
+                .contextMenu {FolderUIView(folderviewModel: folderViewModel,comic: viewModel.findCover(comic).id) }
+                
         })
-    }  
+    }
+    
 }
 
 struct LibraryView_Previews: PreviewProvider {
