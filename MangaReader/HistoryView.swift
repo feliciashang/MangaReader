@@ -10,23 +10,24 @@ import SwiftUI
 struct HistoryView: View {
     @ObservedObject var viewModel: LibraryViewModel
     var body: some View {
-
+        
         NavigationView {
-      //  ScrollView {
+            //  ScrollView {
             List{
                 ForEach(Array(viewModel.timestamps.keys), id: \.self) { id in
                     timeView(id: id, viewModel: viewModel, time: viewModel.timestamps[id]!)
                 }
-               
-        }.toolbar {
-            ToolbarItem(placement: .navigationBarLeading){
-                Text("History")
-                    .font(.title)
+                
+                
+            }.toolbar {
+                ToolbarItem(placement: .navigationBarLeading){
+                    Text("History")
+                        .font(.title)
+                }
             }
         }
-            
-        }
     }
+    
 }
 
 struct timeView: View {

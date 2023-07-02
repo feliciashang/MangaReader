@@ -9,11 +9,12 @@ import SwiftUI
 
 struct UpdatesView: View {
     var body: some View {
-        VStack {
+        ScrollView {
             Text("Updates")
                 .fontWeight(.bold)
                 .font(.largeTitle)
         }
+       
     }
 }
 
