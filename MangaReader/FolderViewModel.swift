@@ -15,15 +15,16 @@ class FolderViewModel: ObservableObject {
     
     @Published private var folderModel: FolderModel = FolderViewModel.createModel()
     
-    var folders: Dictionary<String, Array<Int>> {
-        folderModel.folders
+    var folders: Dictionary<String, Array<String>> {
+    //    print(folderModel.folders["Master"])
+        return folderModel.folders
     }
     
     func addFolder(_ folder: String) {
         folderModel.addFolder(folder)
     }
     
-    func addComic(new_comic comic: Int, add_to_folder folder: String) {
+    func addComic(new_comic comic: String, add_to_folder folder: String) {
         folderModel.addComic(new_comic: comic, add_to_folder: folder)
     }
     

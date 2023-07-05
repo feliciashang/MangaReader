@@ -11,10 +11,11 @@ struct HomeView: View {
     @State var selectedView: Int = 1
     
     @ObservedObject var viewModel = LibraryViewModel()
+    @ObservedObject var folderViewModel = FolderViewModel()
     var body: some View {
         NavigationStack {
             TabView {
-                LibraryView(viewModel: viewModel)//.frame(maxHeight:.infinity)
+                LibraryView(viewModel: viewModel, folderViewModel: folderViewModel)//.frame(maxHeight:.infinity)
                     .tabItem {
                         Text("Home")
                         Image(systemName: "books.vertical")

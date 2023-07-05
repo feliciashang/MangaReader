@@ -8,18 +8,20 @@
 import Foundation
 
 struct FolderModel {
-    private(set) var folders: Dictionary<String, Array<Int>>
+    private(set) var folders: Dictionary<String, Array<String>>
     
     
     init() {
-        folders = Dictionary<String, Array<Int>>()
+        folders = Dictionary<String, Array<String>>()
         folders["test"] = []
     }
     
     mutating func addFolder(_ folder: String) {
-        folders[folder] = Array<Int>()
+        folders[folder] = Array<String>()
     }
-    mutating func addComic(new_comic comic: Int, add_to_folder folder: String) {
-        folders[folder]?.append(comic)
+    mutating func addComic(new_comic comic: String, add_to_folder folder: String) {
+        if (folders[folder] != nil) {
+            folders[folder]!.append(comic)
+        }
     }
 }

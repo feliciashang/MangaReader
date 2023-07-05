@@ -12,7 +12,7 @@ struct FolderUIView: View {
     @State private var new_folder: String?
     @State var newFolder: String = ""
     @State var isAdding = true
-    var comic: Int?
+    var comic: String?
     var body: some View {
         VStack {
             
@@ -35,7 +35,7 @@ struct FolderUIView: View {
             ScrollView {
                 ForEach (Array(folderviewModel.folders.keys),id: \.self) { folder in
                         AnimatedActionButton(title: folder) {
-                            folderviewModel.addComic(new_comic: comic ?? 1, add_to_folder: folder)
+                            folderviewModel.addComic(new_comic: comic ?? "Ending Maker", add_to_folder: folder)
                     }
                 }
             }

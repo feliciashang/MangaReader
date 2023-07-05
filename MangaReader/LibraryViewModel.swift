@@ -50,6 +50,10 @@ class LibraryViewModel: ObservableObject {
     func choose(_ comic: Model.Comic) ->Void {
         model.choose(comic)
     }
+    
+    var folders: Dictionary<String, Array<String>> {
+        return model.Folder.folders
+    }
 //    func findChapter(cover cover: String) -> Model.Comic{
 //        return model.findComic(comicId: id)
 //    }
