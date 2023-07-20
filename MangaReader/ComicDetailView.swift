@@ -7,10 +7,12 @@
 
 import SwiftUI
 
+
 struct ComicDetailView: View {
     var comic: Model.Cover
     @State var isViewed = false
     @ObservedObject var viewModel: LibraryViewModel
+    //var mal: Tracker = Tracker()
     let cornerRadiusCard: CGFloat = 20
     var body: some View {
         VStack(alignment: .leading) {
@@ -37,6 +39,11 @@ struct ComicDetailView: View {
                     genreView(genre: cur_genre)
                 }
             } .padding(.horizontal)
+            HStack {
+                Button(action: {viewModel.addTracker(name: comic.cover) }){
+                    Label("Tracking", systemImage:"plus")
+                }
+            }
             List{
                 ForEach(comic.chapters, id: \.self) { ids in
                     chapterView(viewModel: viewModel, chapter: viewModel.findComic(chapterId: ids))

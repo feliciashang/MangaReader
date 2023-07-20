@@ -12,6 +12,7 @@ struct Model {
     private(set) var comics: Array<Comic>
     private(set) var covers: Array<Cover>
     var Folder: FolderViewModel
+    var mal: Tracker = Tracker()
 //    private(set) var chapterList: Dictionary<String, Array<Int>>
     private(set) var timestamps: Dictionary<Int, String>
     init() {
@@ -63,6 +64,11 @@ struct Model {
         let dateString = df.string(from: date)
         timestamps[comic.id] = dateString
         print(timestamps)
+        mal.updateManga(name: comic.cover, chapter: comic.chapter)
+        
+    }
+    func addTracker(name: String) {
+        mal.addManga(name: name)
     }
    
     struct Cover: Identifiable {

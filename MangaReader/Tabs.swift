@@ -31,21 +31,21 @@ struct Tabs: View {
                                     HStack {
                                         // Image
                                         AnyView(tabs[row].icon)
-                                            .foregroundColor(.white)
+                                            .foregroundColor(.black)
                                             .padding(EdgeInsets(top: 0, leading: 15, bottom: 0, trailing: 0))
                                         // Text
                                         Text(tabs[row].title)
                                             .font(Font.system(size: 18, weight: .semibold))
-                                            .foregroundColor(Color.white)
+                                            .foregroundColor(Color.black)
                                             .padding(EdgeInsets(top: 10, leading: 3, bottom: 10, trailing: 15))
                                     }
                                     .frame(width: fixed ? (geoWidth / CGFloat(tabs.count)) : .none, height: 52)
                                     // Bar Indicator
-                                    Rectangle().fill(selectedTab == row ? Color.white : Color.clear)
+                                    Rectangle().fill(selectedTab == row ? Color.red : Color.clear)
                                         .frame(height: 3)
                                 }.fixedSize()
                             })
-                                .accentColor(Color.white)
+                                .accentColor(Color.black)
                                 .buttonStyle(PlainButtonStyle())
                         }
                     }
@@ -59,7 +59,7 @@ struct Tabs: View {
         }
         .frame(height: 55)
         .onAppear(perform: {
-            UIScrollView.appearance().backgroundColor = UIColor(#colorLiteral(red: 0.6196078431, green: 0.1098039216, blue: 0.2509803922, alpha: 1))
+            UIScrollView.appearance().backgroundColor = .white
             UIScrollView.appearance().bounces = fixed ? false : true
         })
         .onDisappear(perform: {

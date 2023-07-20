@@ -31,6 +31,11 @@ struct HomeView: View {
                         Text("History")
                         Image(systemName: "clock")
                     }
+                MoreView()
+                    .tabItem {
+                        Text("More")
+                        Image(systemName: "ellipsis")
+                    }
             }.onAppear {
                 let tabBarAppearance = UITabBarAppearance()
                 tabBarAppearance.configureWithDefaultBackground()

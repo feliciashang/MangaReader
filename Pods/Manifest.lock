@@ -1,0 +1,28 @@
+PODS:
+  - Alamofire (5.7.1)
+  - Locksmith (4.0.0)
+  - OAuthSwift (2.2.0)
+  - SwiftyJSON (4.3.0)
+
+DEPENDENCIES:
+  - Alamofire
+  - Locksmith
+  - OAuthSwift (~> 2.2.0)
+  - SwiftyJSON (~> 4.0)
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - Locksmith
+    - OAuthSwift
+    - SwiftyJSON
+
+SPEC CHECKSUMS:
+  Alamofire: 0123a34370cb170936ae79a8df46cc62b2edeb88
+  Locksmith: e9bebbaaa4cee3c511bc358a44f843c3fe00e21f
+  OAuthSwift: 75efbb5bd9a4b2b71a37bd7e986bf3f55ddd54c6
+  SwiftyJSON: 6faa0040f8b59dead0ee07436cbf76b73c08fd08
+
+PODFILE CHECKSUM: d0d8f2ddab598bdafa745dafc8add67481ab0736
+
+COCOAPODS: 1.12.1
