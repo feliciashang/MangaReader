@@ -11,18 +11,19 @@ import Foundation
 struct Model {
     private(set) var comics: Array<Comic>
     private(set) var covers: Array<Cover>
-    var Folder: FolderViewModel
+    private(set) var folders: Dictionary<String, Array<String>>
     var mal: Tracker = Tracker()
 //    private(set) var chapterList: Dictionary<String, Array<Int>>
     private(set) var timestamps: Dictionary<Int, String>
     init() {
         comics = Array<Comic>()
         covers = Array<Cover>()
-        Folder = FolderViewModel()
+        folders = Dictionary<String, Array<String>>()
+        folders["test"] = []
         timestamps = Dictionary<Int, String>()
-        Folder.addFolder("Master")
-        Folder.addComic(new_comic: "Ending Maker", add_to_folder: "Master")
-        Folder.addComic(new_comic: "Archmage Transcending Through Regression", add_to_folder: "Master")
+        folders["Master"] = []
+        folders["Master"]!.append("Ending Maker")
+        folders["Master"]!.append("Archmage Transcending Through Regression")
         covers.append(Cover(id:1, cover: "Ending Maker", chapters:[2,3,4], description: "There are two people who were obssessed with the game, Legend of Heroes 2, and spent thousands of hours on it.The forever number one, Kang Jinho, and the forever number two, Hong Yoohee.One day, when they woke up, they had been reincarnated into their characters within the game…“Hey… You too?”“Hey… Me too!”Legend of Heroes 2’s ending is the end of the human world.However, since there are two of them instead of just one, and not just any two, but the server’s rank one and rank two, things could be different.The journey of the veteran gamers to accomplish the happy ending starts now!", genre: ["Romance", "Video games", "Action"]))
         covers.append(Cover(id:2, cover: "Archmage Transcending Through Regression", chapters:[1], description: "Mikhail Walpurgis, the world’s only 9th-circle Archmage, fell in battle due to a damned hero, and managed to cast one final advanced magic spell, <TIME REVERSAL>. As time rewound, he regressed to 20 years ago.“Fine. I’ll just become the hero instead.”", genre: ["Adventure", "Regression", "Action", "Fantasy"]))
         comics.append(Comic(id: 1, cover: "Archmage Transcending Through Regression", chapter: 1, content: "Archmage Transcending Through Regression 1"))
@@ -32,7 +33,15 @@ struct Model {
         sortChapter(cover: "Ending Maker")
         
     }
-    
+    mutating func addFolder(_ folder: String) {
+        folders[folder] = Array<String>()
+    }
+    mutating func addComic(new_comic comic: String, add_to_folder folder: String) {
+        if (folders[folder] != nil) {
+            folders[folder]!.append(comic)
+        }
+        print(folders)
+    }
     func findComic(comicId id: Int) -> Comic {
         for comic in comics{
             if comic.id == id {
@@ -70,6 +79,7 @@ struct Model {
     func addTracker(name: String) {
         mal.addManga(name: name)
     }
+    
    
     struct Cover: Identifiable {
         var id: Int

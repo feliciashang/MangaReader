@@ -8,33 +8,32 @@
 import SwiftUI
 
 struct LibraryView: View {
-    @ObservedObject var viewModel: LibraryViewModel
-    @ObservedObject var folderViewModel: FolderViewModel
+    @EnvironmentObject  var viewModel: LibraryViewModel
     @State private var searchText = ""
     @State private var selectedTab: Int = 0
-    // Todo: fix the hardcode
-    let tabs: [Tab] = [
-        .init(title: "Master"),
-        .init(title: "test")
-    ]
+    @State var folders: [String] = ["Master", "test"]
+    
+    func tabs() -> [Tab]{
+        var tabs: [Tab] = []
+        for name in viewModel.folders.keys {
+            tabs.append(.init(title: name))
+        }
+        return tabs
+    }
     var body: some View {
         NavigationView {
             GeometryReader { geo in
             VStack {
-                //     ForEach(Array(viewModel.folders.keys), id: \.self) { folder in }
-                Tabs(tabs: tabs, geoWidth: geo.size.width, selectedTab: $selectedTab)
+                Tabs(tabs: tabs(), geoWidth: geo.size.width, selectedTab: $selectedTab)
                 TabView(selection: $selectedTab,
                         content: {
-                 //   ForEach(Array(//viewModel.folders.keys), id: \.self) { folder_name in
                         ScrollView {
                             LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]){
-                                ForEach(searchResults(folder: tabs[selectedTab].title), id: \.self) { cover in
-                                    coverView(viewModel: viewModel, comic: cover).aspectRatio(2/3, contentMode: .fit)
+                                ForEach(searchResults(folder: tabs()[selectedTab].title), id: \.self) { cover in
+                                    coverView(comic: cover, folders: $folders).aspectRatio(2/3, contentMode: .fit)
+                                    
                                 }
-                            }}.tag(0).padding(.horizontal)   //.tabItem {
-//                                Text(folder_name)
-//                            }
-                   // }
+                            }}.tag(0).padding(.horizontal)
                     }).tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
                     .searchable(text: $searchText)
                     .toolbar {
@@ -68,54 +67,51 @@ struct LibraryView: View {
         }
 }
 
-struct FolderTabView: View {
-    let comicviewModel: LibraryViewModel
-    var folder: String
-    var body: some View {
-        
-        ScrollView {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]){
-                ForEach(comicviewModel.folders[folder] ?? ["Ending Maker"], id: \.self) { cover in
-                    coverView(viewModel: comicviewModel, comic: cover).aspectRatio(2/3, contentMode: .fit)
-                }
-            }
-        }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading){
-                    Text("Library")
-                        .font(.title)
-                }
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    Image(systemName: "line.3.horizontal.decrease.circle")
-                        .foregroundColor(.black)
-                    Image(systemName: "arrow.clockwise")
-                        .foregroundColor(.black)
-                }
-            }
-    }
-}
 struct coverView: View {
-    let viewModel: LibraryViewModel
+    @EnvironmentObject  var viewModel: LibraryViewModel
     let comic: String
-    
-    let folderViewModel: FolderViewModel = FolderViewModel()
-    
+    @State var isAdding = false
+    @State var newFolder: String = ""
+    @Binding var folders: [String]
     var body: some View {
         NavigationLink(destination: ComicDetailView(comic: viewModel.findCover(comic), viewModel: viewModel), label: {
             Image(comic)
                 .renderingMode(.original)
                 .resizable()
-                .contextMenu {FolderUIView(folderviewModel: folderViewModel,comic: viewModel.findCover(comic).cover) }
-                
+                        .contextMenu {
+                            VStack {
+                                
+                                Button(action: {isAdding.toggle()}){
+                                    Text("New")
+                                    Image(systemName: "plus")
+                                    
+                                }
+                                    ForEach (folders ,id: \.self) { folder in
+                                        Button(action: {viewModel.addComic(new_comic:viewModel.findCover(comic).cover , add_to_folder: folder)}) {
+                                            Text(folder)
+                                            }
+                                    }
+                                
+                            }.id(folders.count)
+                        }.alert("Enter new folder name", isPresented: $isAdding) {
+                            TextField("Enter your name", text: $newFolder)
+                            Button("OK", action: submit)
+                            Button("Cancel"){}
+                        }
         })
     }
+    
+    func submit() {
+        viewModel.addFolder(newFolder)
+        folders.append(newFolder)
+        }
 }
+
 
 
 struct LibraryView_Previews: PreviewProvider {
     static var previews: some View {
-        let library = LibraryViewModel()
-        let folder = FolderViewModel()
-        return LibraryView(viewModel: library, folderViewModel: folder)
+        @State var library = LibraryViewModel()
+        return LibraryView()
     }
 }

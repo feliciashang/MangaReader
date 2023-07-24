@@ -15,6 +15,7 @@ class LibraryViewModel: ObservableObject {
     
     @Published private var model: Model = LibraryViewModel.createModel()
     
+    
     var comics:Array<Model.Comic> {
         return model.comics
     }
@@ -52,11 +53,19 @@ class LibraryViewModel: ObservableObject {
     }
     
     var folders: Dictionary<String, Array<String>> {
-        return model.Folder.folders
+        return model.folders
     }
     
     func addTracker(name: String) {
         model.addTracker(name: name)
+    }
+    
+    func addComic(new_comic comic: String, add_to_folder folder: String) {
+        model.addComic(new_comic: comic, add_to_folder: folder)
+    }
+    
+    func addFolder(_ folder: String) {
+        model.addFolder(folder)
     }
 //    func findChapter(cover cover: String) -> Model.Comic{
 //        return model.findComic(comicId: id)

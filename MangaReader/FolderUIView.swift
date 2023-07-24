@@ -8,43 +8,49 @@
 import SwiftUI
 
 struct FolderUIView: View {
-    @ObservedObject var folderviewModel: FolderViewModel
+    @EnvironmentObject  var folderviewModel: LibraryViewModel
     @State private var new_folder: String?
     @State var newFolder: String = ""
-    @State var isAdding = true
+    @State var isAdding = false
     var comic: String?
     var body: some View {
         VStack {
             
             contextMenu
         }
-        .popover(isPresented: $isAdding) {
-            newFolderField
-         //   print("hi b")
-        }
-
     }
     
     
-    @ViewBuilder
+    //@ViewBuilder
     var contextMenu: some View {
         VStack {
-            AnimatedActionButton(title: "New", systemImage: "plus") {
-                isAdding = true
+            NavigationLink(destination: newFolderField){
+                Image(systemName: "plus")
+                
+            }
+            Button(action: {isAdding = true}) {
+                Text("new")
             }
             ScrollView {
-                ForEach (Array(folderviewModel.folders.keys),id: \.self) { folder in
-                        AnimatedActionButton(title: folder) {
-                            folderviewModel.addComic(new_comic: comic ?? "Ending Maker", add_to_folder: folder)
-                    }
+                Button(action: {print(folderviewModel.folders.keys)}) {
+                    
+                    Text("click for folders")
+                }
+               // List{
+                    ForEach (Array(folderviewModel.folders.keys) ,id: \.self) { folder in
+                        Button(action: {folderviewModel.addComic(new_comic: comic ?? "Ending Maker", add_to_folder: folder)}) {
+                            Text(folder)
+                        }
+                 //   }
                 }
             }
         }
     }
+
     
   //  @ViewBuilder
     
-    var newFolderField: some View {
+    var newFolderField:  some View {
         HStack {
             TextField("Enter New Folder Name", text: $newFolder)
             AnimatedActionButton(title: "Enter" ) {
@@ -57,6 +63,7 @@ struct FolderUIView: View {
 
 //struct FolderUIView_Previews: PreviewProvider {
 //    static var previews: some View {
-//        FolderUIView()
+//        let viewModel = LibraryViewModel()
+//        FolderUIView(folderviewModel: viewModel)
 //    }
 //}

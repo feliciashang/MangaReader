@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HistoryView: View {
-    @ObservedObject var viewModel: LibraryViewModel
+    @EnvironmentObject  var viewModel: LibraryViewModel
     var body: some View {
         
         NavigationView {
@@ -36,11 +36,8 @@ struct timeView: View {
     var time: String
     
     var body: some View {
-//        HStack {
-//            Text(time)
             NavigationLink(destination: ContentView(comic: viewModel.findComic(chapterId: id), viewModel: viewModel), label: {
                 Text(time)
-            //    Text("Chapter: \(viewModel.findComic(chapterId: id).chapter)   Title: \(viewModel.findComic(chapterId: id).cover)")
                 Text("Chapter: \(viewModel.findComic(chapterId: id).chapter)")
                 Image(viewModel.findComic(chapterId: id).cover)
                     .resizable()
@@ -51,9 +48,9 @@ struct timeView: View {
     }
 }
 
-struct HistoryView_Previews: PreviewProvider {
-    static var previews: some View {
-        let viewModel = LibraryViewModel()
-        HistoryView(viewModel: viewModel)
-    }
-}
+//struct HistoryView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        let viewModel = LibraryViewModel()
+//        HistoryView(viewModel: viewModel)
+//    }
+//}

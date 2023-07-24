@@ -23,5 +23,6 @@ struct FolderModel {
         if (folders[folder] != nil) {
             folders[folder]!.append(comic)
         }
+        print(folders)
     }
 }

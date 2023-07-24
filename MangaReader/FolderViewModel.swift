@@ -22,6 +22,7 @@ class FolderViewModel: ObservableObject {
     
     func addFolder(_ folder: String) {
         folderModel.addFolder(folder)
+       // print(folders)
     }
     
     func addComic(new_comic comic: String, add_to_folder folder: String) {
