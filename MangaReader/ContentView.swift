@@ -13,7 +13,6 @@ struct ContentView: View {
     @ObservedObject var viewModel: LibraryViewModel
     @State private var steadyStateZoomScale: CGFloat = 1
     @GestureState private var gestureZoomScale: CGFloat = 1
-    
     let defaultButtonSize: CGFloat = 20
     var body: some View {
         VStack(spacing: 0) {
@@ -29,8 +28,8 @@ struct ContentView: View {
             ZStack {
                 ScrollView {
                     Group {
-                        Image(comic.content).resizable()
-                            .aspectRatio(contentMode: .fit)
+                            Image(comic.content).resizable()
+                                .aspectRatio(contentMode: .fit)
                             
                     }.frame(maxWidth: geo.size.width, minHeight: geo.size.height)
                        

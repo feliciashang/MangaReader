@@ -12,13 +12,10 @@ struct HistoryView: View {
     var body: some View {
         
         NavigationView {
-            //  ScrollView {
             List{
                 ForEach(Array(viewModel.timestamps.keys), id: \.self) { id in
                     timeView(id: id, viewModel: viewModel, time: viewModel.timestamps[id]!)
                 }
-                
-                
             }.toolbar {
                 ToolbarItem(placement: .navigationBarLeading){
                     Text("History")
@@ -27,7 +24,6 @@ struct HistoryView: View {
             }
         }
     }
-    
 }
 
 struct timeView: View {

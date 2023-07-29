@@ -10,4 +10,5 @@ target 'MangaReader' do
 	pod 'Locksmith'
 	pod 'OAuthSwift', '~> 2.2.0'
 	pod 'SwiftyJSON', '~> 4.0'
+	pod 'SwiftSoup'
 end

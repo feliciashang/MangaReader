@@ -2,12 +2,14 @@ PODS:
   - Alamofire (5.7.1)
   - Locksmith (4.0.0)
   - OAuthSwift (2.2.0)
+  - SwiftSoup (2.6.1)
   - SwiftyJSON (4.3.0)
 
 DEPENDENCIES:
   - Alamofire
   - Locksmith
   - OAuthSwift (~> 2.2.0)
+  - SwiftSoup
   - SwiftyJSON (~> 4.0)
 
 SPEC REPOS:
@@ -15,14 +17,16 @@ SPEC REPOS:
     - Alamofire
     - Locksmith
     - OAuthSwift
+    - SwiftSoup
     - SwiftyJSON
 
 SPEC CHECKSUMS:
   Alamofire: 0123a34370cb170936ae79a8df46cc62b2edeb88
   Locksmith: e9bebbaaa4cee3c511bc358a44f843c3fe00e21f
   OAuthSwift: 75efbb5bd9a4b2b71a37bd7e986bf3f55ddd54c6
+  SwiftSoup: 5dd2c1b06afc964f30d99894af6ede22ede627aa
   SwiftyJSON: 6faa0040f8b59dead0ee07436cbf76b73c08fd08
 
-PODFILE CHECKSUM: d0d8f2ddab598bdafa745dafc8add67481ab0736
+PODFILE CHECKSUM: 804e9b4c8718187de51ae112020a71ad655a68c2
 
 COCOAPODS: 1.12.1

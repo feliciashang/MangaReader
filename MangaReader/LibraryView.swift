@@ -11,7 +11,7 @@ struct LibraryView: View {
     @EnvironmentObject  var viewModel: LibraryViewModel
     @State private var searchText = ""
     @State private var selectedTab: Int = 0
-    @State var folders: [String] = ["Master", "test"]
+    @State var folders: [String] = ["ALL"]
     
     func tabs() -> [Tab]{
         var tabs: [Tab] = []
@@ -78,26 +78,13 @@ struct coverView: View {
             Image(comic)
                 .renderingMode(.original)
                 .resizable()
-                        .contextMenu {
-                            VStack {
-                                
-                                Button(action: {isAdding.toggle()}){
-                                    Text("New")
-                                    Image(systemName: "plus")
-                                    
-                                }
-                                    ForEach (folders ,id: \.self) { folder in
-                                        Button(action: {viewModel.addComic(new_comic:viewModel.findCover(comic).cover , add_to_folder: folder)}) {
-                                            Text(folder)
-                                            }
-                                    }
-                                
-                            }.id(folders.count)
-                        }.alert("Enter new folder name", isPresented: $isAdding) {
-                            TextField("Enter your name", text: $newFolder)
-                            Button("OK", action: submit)
-                            Button("Cancel"){}
-                        }
+                .contextMenu() {
+                    contextMenu
+                }.alert("Enter new folder name", isPresented: $isAdding) {
+                    TextField("Enter your name", text: $newFolder)
+                    Button("OK", action: submit)
+                    Button("Cancel"){}
+                }
         })
     }
     
@@ -105,6 +92,20 @@ struct coverView: View {
         viewModel.addFolder(newFolder)
         folders.append(newFolder)
         }
+    
+    var contextMenu: some View {
+        Section("Add to Folder") {
+            Button(action: {isAdding.toggle()}){
+                Text("New")
+                Image(systemName: "plus")
+            }
+            ForEach (folders ,id: \.self) { folder in
+                Button(action: {viewModel.addComic(new_comic:viewModel.findCover(comic).cover, add_to_folder: folder)}) {
+                        Text(folder)
+                }
+            }
+        }.id(folders.count)
+    }
 }
 
 
