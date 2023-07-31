@@ -12,7 +12,7 @@ struct HomeView: View {
     
     @StateObject var viewModel: LibraryViewModel = LibraryViewModel()
     @ObservedObject var folderViewModel = FolderViewModel()
-    @ObservedObject var extensionsViewModel = ExtensionsViewModel()
+    
     var body: some View {
         NavigationStack {
             TabView {
@@ -32,7 +32,7 @@ struct HomeView: View {
                         Text("History")
                         Image(systemName: "clock")
                     }
-                MoreView(pages: extensionsViewModel.pages, number_of_pages: extensionsViewModel.pages.count).environmentObject(viewModel)
+                MoreView().environmentObject(viewModel)
                     .tabItem {
                         Text("More")
                         Image(systemName: "ellipsis")

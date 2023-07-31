@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import UIKit
 
 struct Model {
     private(set) var comics: Array<Comic>
@@ -40,15 +40,35 @@ struct Model {
         if (folders[folder] != nil) {
             folders[folder]!.append(comic)
         }
-        print(folders)
+      //  print(folders)
+    }
+    mutating func addChapter(cover: String, chapter: Int, filename: String) {
+        if let index = covers.firstIndex(where: { $0.cover == cover }) {
+            self.comics.append(Comic(id: comics.count + 1, cover: cover, chapter: chapter, content: "", downloaded: true, filename: filename))
+            covers[index].chapters.append(comics.count )
+                
+            }
+        
+        else {
+            self.covers.append(Cover(id: covers.count + 1, cover: cover, chapters:[comics.count+1], description: ".....", genre: ["empty"]))
+            self.folders["ALL"]!.append(cover)
+            self.comics.append(Comic(id: comics.count + 1, cover: cover, chapter: chapter, content: "", downloaded: true, filename: filename))
+        }
+        print(self.covers)
+        print(self.comics)
+//        print("done")
     }
     func findComic(comicId id: Int) -> Comic {
+//        print("hi")
+//        print(id)
+//        print(comics)
+        
         for comic in comics{
             if comic.id == id {
                 return comic
             }
         }
-        print("error")
+        print("error finding comic")
         return Comic(id: 1, cover: "Cover", chapter: 1, content: "manga")
         
     }
@@ -58,7 +78,7 @@ struct Model {
                 return comic
             }
         }
-        print("error")
+        print("error finding cover")
         return Cover(id:1, cover: "Ending Maker", chapters:[2,3,4], description: "There are two people who were obssessed with the game, Legend of Heroes 2, and spent thousands of hours on it.The forever number one, Kang Jinho, and the forever number two, Hong Yoohee.One day, when they woke up, they had been reincarnated into their characters within the game…“Hey… You too?”“Hey… Me too!”Legend of Heroes 2’s ending is the end of the human world.However, since there are two of them instead of just one, and not just any two, but the server’s rank one and rank two, things could be different.The journey of the veteran gamers to accomplish the happy ending starts now!", genre: ["romance", "video gamesssss", "action"])
         
     }
@@ -79,6 +99,22 @@ struct Model {
     func addTracker(name: String) {
         mal.addManga(name: name)
     }
+    private func getDocumentsDirectory() -> URL {
+           let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+           
+           return paths[0]
+       }
+    
+    func load(fileName: String) -> UIImage? {
+        let fileURL = self.getDocumentsDirectory().appendingPathComponent(fileName)
+        do {
+            let imageData = try Data(contentsOf: fileURL)
+            return UIImage(data: imageData)
+        } catch {
+            print("Error loading image : \(error)")
+        }
+        return nil
+    }
     
    
     struct Cover: Identifiable {
@@ -93,5 +129,7 @@ struct Model {
         var cover: String
         var chapter: Int
         var content: String
+        var downloaded: Bool = false
+        var filename: String = ""
     }
 }

@@ -12,9 +12,10 @@ import SwiftSoup
 
 class Extensions {
     var pages: Array<Page> = Array<Page>()
+    private(set) var downloadPages: Dictionary<Int, String> = Dictionary<Int, String>()
     @IBOutlet var imageView : UIImageView?
     
-    let path:String = "https://asura.gg/dungeon-odyssey-chapter-57/"
+    let path:String = "https://asura.gg/2226495089-my-daughter-is-a-dragon-chapter-0/"
     
     init() {
         AF.request( path, method: .get, encoding: URLEncoding.httpBody).responseData  { [self] response in
@@ -48,24 +49,32 @@ class Extensions {
         URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
     }
     
-    func downloadImage(from url: URL) {
+    func downloadImage(from page: Page) -> String {
+        let url = URL(string:page.url)
+        var filename = ""
         print("Download Started")
-        getData(from: url) { data, response, error in
+        getData(from: url!) { data, response, error in
+            filename = response?.suggestedFilename ?? url!.lastPathComponent
             guard let data = data, error == nil else { return }
-            print(response?.suggestedFilename ?? url.lastPathComponent)
+            
+            print(response?.suggestedFilename ?? url!.lastPathComponent)
             print("Download Finished")
             do {
-                                 try data.write(to: self.getDocumentsDirectory().appendingPathComponent("image.jpg"))
+                try data.write(to: self.getDocumentsDirectory().appendingPathComponent(response?.suggestedFilename ?? url!.lastPathComponent))
                                  print("Image saved to: ",self.getDocumentsDirectory())
-                             } catch {
-                                 print(error)
-                             }
-            
+                self.downloadPages[page.id] = response?.suggestedFilename ?? url!.lastPathComponent
+           //     print(self.downloadPages)
+                filename = self.downloadPages[page.id]!
+            } catch {
+                print(error)
+            }
         }
+        return filename
     }
     
     private func getDocumentsDirectory() -> URL {
            let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+           
            return paths[0]
        }
     
@@ -86,6 +95,8 @@ class Extensions {
         let url: String
        // let number: Int
     }
+    
+   
     
     
 }

@@ -10,11 +10,12 @@ import OAuthSwift
 
 struct MoreView: View {
     let mal = MyAnimeListApi()
-    let extensionsViewModel = ExtensionsViewModel()
+    @EnvironmentObject  var viewModel: LibraryViewModel
+    @ObservedObject var extensionsViewModel = ExtensionsViewModel()
 //    let api = AlamofireAPI()
     @State var code:String = ""
-    @State var pages:Array<Extensions.Page>
-    @State var number_of_pages: Int
+    @State var pages:Array<Extensions.Page> = Array<Extensions.Page>()
+    @State var number_of_pages: Int = 0
     @State var downloaded: Bool = false
   //  @State var page = "https://asura.gg/wp-content/uploads/2023/05/EndDesignPSD02.png"
     let oauthswift = OAuth2Swift(consumerKey: "frafe", consumerSecret: "afefef", authorizeUrl: "afeaefeaf", accessTokenUrl: "afefea", responseType: "code")
@@ -30,16 +31,16 @@ struct MoreView: View {
                     if number_of_pages > 0 {
                         ForEach(pages) { page in
                             Text(page.url)
-                            pageNumber(page: page)
+                            pageNumber(page: page, viewModel: extensionsViewModel, model: viewModel)
                         }
                     }
                 Button("download"){
-                    let url = URL(string:"https://asura.gg/wp-content/uploads/2023/07/07-214.jpg")
-                    extensionsViewModel.downloadImage(from: url!)
+                    let url = "https://asura.gg/wp-content/uploads/2023/07/07-214.jpg"
+                    extensionsViewModel.downloadImage(from: Extensions.Page(id:4, url: url))
                     downloaded = true
                 }
                 if downloaded {
-                    NavigationLink(destination: downloadpageView(uiimage: extensionsViewModel.load(fileName: "image.jpg")!), label: {
+                    NavigationLink(destination: downloadpageView(uiimage: extensionsViewModel.load(fileName: "07-214.jpg")!), label: {
                         Text("get picture")
                     })
                 }
@@ -60,10 +61,30 @@ struct MoreView: View {
 
 struct pageNumber: View {
     let page: Extensions.Page
+    let viewModel: ExtensionsViewModel
+    let model: LibraryViewModel
     var body: some View {
         NavigationLink(destination: pageView(page: page.url), label:{
-            
-            Text(String(page.id))
+            HStack {
+                Text(String(page.id))
+                Button("Downloaded") {
+                    Task {
+                        
+                        do {
+                            let data =  viewModel.downloadImage(from: page)
+                            let lastComponent = page.url.components(separatedBy: "/").last
+                            print(lastComponent)
+                            
+                            model.addChapter(cover: "mangaPage", chapter: page.id, filename: lastComponent!)
+                        }
+                        catch {
+                            print(error.localizedDescription)
+                        }
+                        
+                    }
+                    
+                }
+            }
         })
     }
 }
