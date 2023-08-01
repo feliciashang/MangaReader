@@ -68,7 +68,7 @@ class LibraryViewModel: ObservableObject {
         model.addFolder(folder)
     }
     
-    func addChapter(cover: String, chapter: Int, filename: String) {
+    func addChapter(cover: String, chapter: Int, filename: Array<String>) {
         model.addChapter(cover: cover, chapter: chapter, filename: filename)
     }
     

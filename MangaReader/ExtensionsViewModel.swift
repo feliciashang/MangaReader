@@ -25,16 +25,9 @@ class ExtensionsViewModel: ObservableObject {
         return extensions.pages[0]
     }
     
-    func downloadImage(from page: Extensions.Page)  -> String {
-        let data =  extensions.downloadImage(from: page)
-        return data
+    func downloadImage(from page: Extensions.Page) {
+        extensions.downloadImage(from: page)
+        
     }
     
-    func load(fileName: String) -> UIImage? {
-        extensions.load(fileName: fileName)
-    }
-    
-    var downloads:Dictionary<Int, String> {
-        return extensions.downloadPages
-    }
 }

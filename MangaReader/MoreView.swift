@@ -12,13 +12,11 @@ struct MoreView: View {
     let mal = MyAnimeListApi()
     @EnvironmentObject  var viewModel: LibraryViewModel
     @ObservedObject var extensionsViewModel = ExtensionsViewModel()
-//    let api = AlamofireAPI()
     @State var code:String = ""
     @State var pages:Array<Extensions.Page> = Array<Extensions.Page>()
     @State var number_of_pages: Int = 0
     @State var downloaded: Bool = false
-  //  @State var page = "https://asura.gg/wp-content/uploads/2023/05/EndDesignPSD02.png"
-    let oauthswift = OAuth2Swift(consumerKey: "frafe", consumerSecret: "afefef", authorizeUrl: "afeaefeaf", accessTokenUrl: "afefea", responseType: "code")
+    @State var arrays:Array<String> = []
     var body: some View {
         NavigationView {
             VStack {
@@ -28,27 +26,27 @@ struct MoreView: View {
                         pages = extensionsViewModel.pages
                     }
                 }
+                Button("download 0") {
+                    
+                    
+                    for page in pages {
+                        extensionsViewModel.downloadImage(from: page)
+                        let lastComponent = page.url.components(separatedBy: "/").last ?? "cdc"
+                        
+                        arrays.append(lastComponent)
+                    }
+                    
+                    viewModel.addChapter(cover: "mangaPage", chapter: 0, filename: arrays)
+                }
                     if number_of_pages > 0 {
                         ForEach(pages) { page in
                             Text(page.url)
                             pageNumber(page: page, viewModel: extensionsViewModel, model: viewModel)
                         }
                     }
-                Button("download"){
-                    let url = "https://asura.gg/wp-content/uploads/2023/07/07-214.jpg"
-                    extensionsViewModel.downloadImage(from: Extensions.Page(id:4, url: url))
-                    downloaded = true
-                }
-                if downloaded {
-                    NavigationLink(destination: downloadpageView(uiimage: extensionsViewModel.load(fileName: "07-214.jpg")!), label: {
-                        Text("get picture")
-                    })
-                }
-                    
                 Button("MyAnimeList") {
                     AlamofireAPI.shared.startOAuth2Login()
                 }
-                
             }.toolbar {
                 ToolbarItem(placement: .navigationBarLeading){
                     Text("Tracking")
@@ -71,14 +69,10 @@ struct pageNumber: View {
                     Task {
                         
                         do {
-                            let data =  viewModel.downloadImage(from: page)
+                            viewModel.downloadImage(from: page)
                             let lastComponent = page.url.components(separatedBy: "/").last
-                            print(lastComponent)
                             
-                            model.addChapter(cover: "mangaPage", chapter: page.id, filename: lastComponent!)
-                        }
-                        catch {
-                            print(error.localizedDescription)
+//                            model.addChapter(cover: "mangaPage", chapter: page.id, filename: lastComponent!)
                         }
                         
                     }
@@ -96,24 +90,6 @@ struct pageView: View {
                 ScrollView {
                     Group {
                             AsyncImage(url: URL(string: page))
-                                .aspectRatio(contentMode: .fit)
-                        }
-                            
-                    }.frame(maxWidth: geo.size.width, minHeight: geo.size.height)
-                       
-                        
-                }
-            }
-        }
-    }
-struct downloadpageView: View {
-    let uiimage: UIImage
-    var body: some View {
-        GeometryReader { geo in
-            ZStack {
-                ScrollView {
-                    Group {
-                        Image(uiImage: uiimage).resizable()
                                 .aspectRatio(contentMode: .fit)
                         }
                             

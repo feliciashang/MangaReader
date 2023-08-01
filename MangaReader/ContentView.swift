@@ -27,16 +27,15 @@ struct ContentView: View {
         GeometryReader { geo in
             ZStack {
                 ScrollView {
-                   Group {
-//                    Group { if comic.downloaded == false {
-//
-//                        Image(comic.content).resizable()
-//                            .aspectRatio(contentMode: .fit)
-//                    } else {
-                        
-                       Image(uiImage: viewModel.load(fileName: comic.filename)!).resizable()
+                    Group { if comic.downloaded == false {
+                        Image(comic.content).resizable()
+                            .aspectRatio(contentMode: .fit)
+                    } else {
+                        ForEach(comic.filename, id: \.self){ filename in
+                            Image(uiImage: viewModel.load(fileName: filename)!).resizable()
                                 .aspectRatio(contentMode: .fit)
-                //    }
+                        }
+                    }
                     }.frame(maxWidth: geo.size.width, minHeight: geo.size.height)
                        
                         
