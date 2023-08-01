@@ -42,7 +42,7 @@ struct Model {
         }
       //  print(folders)
     }
-    mutating func addChapter(cover: String, chapter: Int, filename: Array<String>) {
+    mutating func addChapter(cover: String, chapter: Int, description: String, genre: Array<String>, filename: Array<String>) {
         if let index = covers.firstIndex(where: { $0.cover == cover }) {
             self.comics.append(Comic(id: comics.count + 1, cover: cover, chapter: chapter, content: "", downloaded: true, filename: filename))
             covers[index].chapters.append(comics.count )
@@ -50,7 +50,7 @@ struct Model {
             }
         
         else {
-            self.covers.append(Cover(id: covers.count + 1, cover: cover, chapters:[comics.count+1], description: ".....", genre: ["empty"]))
+            self.covers.append(Cover(id: covers.count + 1, cover: cover, chapters:[comics.count+1], description: description, genre: genre))
             self.folders["ALL"]!.append(cover)
             self.comics.append(Comic(id: comics.count + 1, cover: cover, chapter: chapter, content: "", downloaded: true, filename: filename))
         }

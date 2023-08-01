@@ -16,6 +16,7 @@ struct MoreView: View {
     @State var pages:Array<Extensions.Page> = Array<Extensions.Page>()
     @State var number_of_pages: Int = 0
     @State var downloaded: Bool = false
+    @State var description: String = ""
     @State var arrays:Array<String> = []
     var body: some View {
         NavigationView {
@@ -25,6 +26,9 @@ struct MoreView: View {
                         number_of_pages = extensionsViewModel.pages.count
                         pages = extensionsViewModel.pages
                     }
+                }
+                Button("descr") {
+                    extensionsViewModel.getDescription(from: "https://asura.gg/manga/0223090894-my-daughter-is-a-dragon/")
                 }
                 Button("download 0") {
                     
@@ -36,7 +40,7 @@ struct MoreView: View {
                         arrays.append(lastComponent)
                     }
                     
-                    viewModel.addChapter(cover: "mangaPage", chapter: 0, filename: arrays)
+                    viewModel.addChapter(cover: "mangaPage", chapter: 0, description: extensionsViewModel.onlineCovers[0].description, genre: extensionsViewModel.onlineCovers[0].genre, filename: arrays)
                 }
                     if number_of_pages > 0 {
                         ForEach(pages) { page in

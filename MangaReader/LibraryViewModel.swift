@@ -68,8 +68,8 @@ class LibraryViewModel: ObservableObject {
         model.addFolder(folder)
     }
     
-    func addChapter(cover: String, chapter: Int, filename: Array<String>) {
-        model.addChapter(cover: cover, chapter: chapter, filename: filename)
+    func addChapter(cover: String, chapter: Int, description: String, genre: Array<String>, filename: Array<String>) {
+        model.addChapter(cover: cover, chapter: chapter, description: description, genre: genre, filename: filename)
     }
     
     func load(fileName: String) -> UIImage? {

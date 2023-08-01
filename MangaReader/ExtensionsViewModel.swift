@@ -29,5 +29,11 @@ class ExtensionsViewModel: ObservableObject {
         extensions.downloadImage(from: page)
         
     }
+    func getDescription(from path: String) {
+        extensions.getDescription(from: path)
+    }
+    var onlineCovers: Array<Extensions.onlineCover> {
+        return extensions.onlineCovers
+    }
     
 }
