@@ -32,11 +32,25 @@ struct HomeView: View {
                         Text("History")
                         Image(systemName: "clock")
                     }
-                MoreView().environmentObject(viewModel)
-                    .tabItem {
-                        Text("More")
-                        Image(systemName: "ellipsis")
+                NavigationView {
+                    List {
+                        NavigationLink(destination: MoreView().environmentObject(viewModel)) {
+                            Text("AsuraScan downloads")
+                        }
+                        NavigationLink(destination: TrackerView()) {
+                            Text("MyAnimeList Tracking")
+                        }
+                    }.toolbar {
+                        ToolbarItem(placement: .navigationBarLeading){
+                            Text("More")
+                                .font(.title)
+                        }
                     }
+                }
+                .tabItem {
+                    Text("More")
+                    Image(systemName: "ellipsis")
+                }
             }.onAppear {
                 let tabBarAppearance = UITabBarAppearance()
                 tabBarAppearance.configureWithDefaultBackground()

@@ -30,6 +30,7 @@
 		3DC450102A64B7E000BD65FF /* OAuth2 in Frameworks */ = {isa = PBXBuildFile; productRef = 3DC4500F2A64B7E000BD65FF /* OAuth2 */; };
 		3DC450152A68857C00BD65FF /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC450142A68857C00BD65FF /* Tracker.swift */; };
 		3DDA6B0C2A7334AB00F5914F /* ExtensionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA6B0B2A7334AB00F5914F /* ExtensionsViewModel.swift */; };
+		3DDA6B0E2A7894D300F5914F /* TrackerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA6B0D2A7894D300F5914F /* TrackerView.swift */; };
 		3DE5C85F2A6F59230097010B /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE5C85E2A6F59230097010B /* Extensions.swift */; };
 		548899E91457E31B542C516B /* Pods_MangaReader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89BDD164E81F103C6A3CAA91 /* Pods_MangaReader.framework */; };
 /* End PBXBuildFile section */
@@ -59,6 +60,7 @@
 		3DC450112A66062300BD65FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		3DC450142A68857C00BD65FF /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
 		3DDA6B0B2A7334AB00F5914F /* ExtensionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionsViewModel.swift; sourceTree = "<group>"; };
+		3DDA6B0D2A7894D300F5914F /* TrackerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerView.swift; sourceTree = "<group>"; };
 		3DE5C85E2A6F59230097010B /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		541088CBDCBE3875538CC637 /* Pods-MangaReader.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MangaReader.release.xcconfig"; path = "Target Support Files/Pods-MangaReader/Pods-MangaReader.release.xcconfig"; sourceTree = "<group>"; };
 		89BDD164E81F103C6A3CAA91 /* Pods_MangaReader.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MangaReader.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -123,6 +125,7 @@
 				3D0444F22A44FC5F005D7B83 /* Assets.xcassets */,
 				3D0444F42A44FC5F005D7B83 /* Preview Content */,
 				3DC450042A57500300BD65FF /* MyAnimeListApi.swift */,
+				3DDA6B0D2A7894D300F5914F /* TrackerView.swift */,
 			);
 			path = MangaReader;
 			sourceTree = "<group>";
@@ -283,6 +286,7 @@
 				3D0445072A4A2A60005D7B83 /* UpdatesView.swift in Sources */,
 				3DC450012A56151900BD65FF /* MoreView.swift in Sources */,
 				3DDA6B0C2A7334AB00F5914F /* ExtensionsViewModel.swift in Sources */,
+				3DDA6B0E2A7894D300F5914F /* TrackerView.swift in Sources */,
 				3DC44FF72A50C58500BD65FF /* FolderUIView.swift in Sources */,
 				3DC450152A68857C00BD65FF /* Tracker.swift in Sources */,
 				3DC44FFF2A55F82200BD65FF /* Tabs.swift in Sources */,

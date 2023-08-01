@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import OAuthSwift
+
 
 struct MoreView: View {
     let mal = MyAnimeListApi()
@@ -44,12 +44,10 @@ struct MoreView: View {
                             pageNumber(page: page, viewModel: extensionsViewModel, model: viewModel)
                         }
                     }
-                Button("MyAnimeList") {
-                    AlamofireAPI.shared.startOAuth2Login()
-                }
+                
             }.toolbar {
                 ToolbarItem(placement: .navigationBarLeading){
-                    Text("Tracking")
+                    Text("AsuraScan Webtoons")
                         .font(.title)
                 }
             }
