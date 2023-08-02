@@ -68,7 +68,6 @@ struct chapterView: View {
     var body: some View {
         NavigationLink(destination: ContentView(comic: chapter, viewModel: viewModel), label: {
             Text("Chapter \(chapter.chapter)")
-                
         })
     }
 }

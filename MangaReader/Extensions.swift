@@ -12,13 +12,13 @@ import SwiftSoup
 
 class Extensions {
     var pages: Array<Page> = Array<Page>()
+    var display_links: Array<String> = Array<String>()
     var onlineCovers: Array<onlineCover> = Array<onlineCover>()
     @IBOutlet var imageView : UIImageView?
     
     let path:String = "https://asura.gg/2226495089-my-daughter-is-a-dragon-chapter-0/"
     
     init() {
-       
         AF.request( path, method: .get, encoding: URLEncoding.httpBody).responseData  { [self] response in
             switch response.result {
             case .success(let value):
@@ -69,7 +69,41 @@ class Extensions {
        
     }
     
-    func getDescription(from path: String) {
+    func getMangaList(from path: String, completion: @escaping (Array<String>, Array<String>) -> Void)  {
+        var links: Array<String> = []
+        var titles: Array<String> = []
+        AF.request( path, method: .get, encoding: URLEncoding.httpBody).responseData  { [self] response in
+            switch response.result {
+            case .success(let value):
+                let data = value
+                let html: String = String(data:data, encoding: .utf8)!
+                do {
+                    let doc: Document = try SwiftSoup.parseBodyFragment(html)
+                    let link_class = try doc.getElementsByClass("bsx")
+                    let els: Elements = try link_class.select("a")
+                   // print(try link_class.array())
+                    for link in els.array(){
+                        links.append(try link.attr("href"))
+                    }
+                    for title in els.array() {
+                        titles.append(try title.attr("title"))
+                    }
+                    completion(links, titles)
+                }
+                
+                catch Exception.Error(let type, let message) {
+                  //  print(message)
+                } catch {
+                  //  print("error")
+                }
+     
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+
+    func getDescription(from path: String, for title: String, completion: @escaping (String) -> Void) {
         var description = ""
         var genre: Array<String> = []
         AF.request( path, method: .get, encoding: URLEncoding.httpBody).responseData  { [self] response in
@@ -93,7 +127,8 @@ class Extensions {
                         
                     }
                     print(genre)
-                    onlineCovers.append(onlineCover(id: 0, description: description, genre: genre))
+                    onlineCovers.append(onlineCover(id: 0, title: title, links: path, description: description, genres: genre))
+                    completion(description)
                 } catch Exception.Error(let type, let message) {
                   //  print(message)
                 } catch {
@@ -126,8 +161,10 @@ class Extensions {
     
     struct onlineCover: Identifiable {
         var id: Int
-        var description: String
-        var genre: Array<String>
+        var title: String
+        var links: String
+        var description: String = ""
+        var genres: Array<String> = []
     }
     
     

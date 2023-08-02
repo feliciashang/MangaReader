@@ -9,46 +9,16 @@ import SwiftUI
 
 
 struct MoreView: View {
-    let mal = MyAnimeListApi()
     @EnvironmentObject  var viewModel: LibraryViewModel
     @ObservedObject var extensionsViewModel = ExtensionsViewModel()
-    @State var code:String = ""
-    @State var pages:Array<Extensions.Page> = Array<Extensions.Page>()
-    @State var number_of_pages: Int = 0
-    @State var downloaded: Bool = false
-    @State var description: String = ""
-    @State var arrays:Array<String> = []
     var body: some View {
+        //tried using navigationstack to reduce the extra button
         NavigationView {
-            VStack {
-                Button("click") {
-                    if extensionsViewModel.pages.count > 0{
-                        number_of_pages = extensionsViewModel.pages.count
-                        pages = extensionsViewModel.pages
-                    }
-                }
-                Button("descr") {
-                    extensionsViewModel.getDescription(from: "https://asura.gg/manga/0223090894-my-daughter-is-a-dragon/")
-                }
-                Button("download 0") {
-                    
-                    
-                    for page in pages {
-                        extensionsViewModel.downloadImage(from: page)
-                        let lastComponent = page.url.components(separatedBy: "/").last ?? "cdc"
-                        
-                        arrays.append(lastComponent)
-                    }
-                    
-                    viewModel.addChapter(cover: "mangaPage", chapter: 0, description: extensionsViewModel.onlineCovers[0].description, genre: extensionsViewModel.onlineCovers[0].genre, filename: arrays)
-                }
-                    if number_of_pages > 0 {
-                        ForEach(pages) { page in
-                            Text(page.url)
-                            pageNumber(page: page, viewModel: extensionsViewModel, model: viewModel)
-                        }
-                    }
-                
+            List{
+                NavigationLink(destination: asuraView(viewModel: extensionsViewModel), label: {
+                    Text("open asura")
+
+                })
             }.toolbar {
                 ToolbarItem(placement: .navigationBarLeading){
                     Text("AsuraScan Webtoons")
@@ -59,53 +29,68 @@ struct MoreView: View {
     }
 }
 
-struct pageNumber: View {
-    let page: Extensions.Page
+struct asuraView: View {
     let viewModel: ExtensionsViewModel
-    let model: LibraryViewModel
     var body: some View {
-        NavigationLink(destination: pageView(page: page.url), label:{
-            HStack {
-                Text(String(page.id))
-                Button("Downloaded") {
-                    Task {
-                        
-                        do {
-                            viewModel.downloadImage(from: page)
-                            let lastComponent = page.url.components(separatedBy: "/").last
-                            
-//                            model.addChapter(cover: "mangaPage", chapter: page.id, filename: lastComponent!)
-                        }
-                        
-                    }
-                    
+        VStack {
+            Button("view popular things") {
+                viewModel.getMangaList(from: "https://asura.gg/manga/?page=1&order=update") { (value1, value2) in
                 }
             }
-        })
-    }
-}
-struct pageView: View {
-    let page: String
-    var body: some View {
-        GeometryReader { geo in
-            ZStack {
-                ScrollView {
-                    Group {
-                            AsyncImage(url: URL(string: page))
-                                .aspectRatio(contentMode: .fit)
-                        }
-                            
-                    }.frame(maxWidth: geo.size.width, minHeight: geo.size.height)
-                       
-                        
-                }
-            }
+            NavigationLink(destination: listView(viewModel: viewModel), label: {
+                Text("enter")
+            })
         }
     }
+    
+}
+
+struct listView: View {
+    let viewModel: ExtensionsViewModel
+    var body: some View {
+        List {
+            ForEach(0..<viewModel.titles.count, id: \.self) { i in
+                tempView(viewModel: viewModel, i: i)
+            }
+            
+        }
+    }
+}
+
+
+struct tempView: View {
+    let viewModel: ExtensionsViewModel
+    let i: Int
+    var body: some View {
+        
+            Button(viewModel.titles[i]) {
+                viewModel.getDescription(from: viewModel.links[i], for: viewModel.titles[i]) { (value1) in
+                }
+            }
+            NavigationLink(destination: coverDetailView(viewModel: viewModel), label: {
+                Text("enter")
+            })
+        }
+    
+}
+
+
+struct coverDetailView: View {
+    let viewModel: ExtensionsViewModel
+    var body: some View {
+            VStack {
+                Text(viewModel.cover_description)
+                Button("click back") {
+                }
+            }
+    }
+}
+
+
     struct MoreView_Previews: PreviewProvider {
         static var previews: some View {
             let extensions = ExtensionsViewModel()
-            MoreView(pages:extensions.pages, number_of_pages: extensions.pages.count)
+            MoreView()
         }
     }
 
