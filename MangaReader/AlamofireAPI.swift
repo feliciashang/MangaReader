@@ -100,6 +100,7 @@ class AlamofireAPI
     }
     
     func updateList(id: Int, chapters: Int) {
+        print(id)
         let path: String = "https://api.myanimelist.net/v2/manga/\(id)/my_list_status"
         let parameters: Parameters = [
            // "manga_id": 28309,
@@ -129,13 +130,14 @@ class AlamofireAPI
                 response in
                 switch response.result {
                 case .success(let value):
-                    print(String(data:value, encoding: .utf8)!)
+                  //  print(String(data:value, encoding: .utf8)!)
                     let data = JSON(value)
                    // id = data["data"][0]["node"]["id"].int!
                     if let items = data["data"].array {
                         for i in items {
                             if i["node"]["title"].string == original_name {
                                 id = i["node"]["id"].int!
+                                print("hiiii")
                                 print(id)
                                 completion(id)
                             }

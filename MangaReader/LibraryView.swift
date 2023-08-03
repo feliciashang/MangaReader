@@ -75,16 +75,29 @@ struct coverView: View {
     @Binding var folders: [String]
     var body: some View {
         NavigationLink(destination: ComicDetailView(comic: viewModel.findCover(comic), viewModel: viewModel), label: {
-            Image(comic)
-                .renderingMode(.original)
-                .resizable()
-                .contextMenu() {
-                    contextMenu
-                }.alert("Enter new folder name", isPresented: $isAdding) {
-                    TextField("Enter your name", text: $newFolder)
-                    Button("OK", action: submit)
-                    Button("Cancel"){}
-                }
+            if viewModel.findCover(comic).downloaded == false {
+                Image(comic)
+                    .renderingMode(.original)
+                    .resizable()
+                    .contextMenu() {
+                        contextMenu
+                    }.alert("Enter new folder name", isPresented: $isAdding) {
+                        TextField("Enter your name", text: $newFolder)
+                        Button("OK", action: submit)
+                        Button("Cancel"){}
+                    }
+            } else {
+                Image(uiImage: viewModel.load(fileName: comic+".jpg")!)
+                    .renderingMode(.original)
+                    .resizable()
+                    .contextMenu() {
+                        contextMenu
+                    }.alert("Enter new folder name", isPresented: $isAdding) {
+                        TextField("Enter your name", text: $newFolder)
+                        Button("OK", action: submit)
+                        Button("Cancel"){}
+                    }
+            }
         })
     }
     

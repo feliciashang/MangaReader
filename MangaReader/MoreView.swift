@@ -11,8 +11,10 @@ class SheetMananger: ObservableObject{
         @Published var showSheet = false
         @Published var whichSheet: String? = nil
         @Published var chapters: Array<String>? = nil
-        @Published var chapter_numbers: Array<String>? = nil
-    }
+        @Published var chapter_numbers: Array<Int>? = nil
+        @Published var cover: String? = nil
+        @Published var title: String? = nil
+}
 struct MoreView: View {
     @EnvironmentObject  var viewModel: LibraryViewModel
     @ObservedObject var extensionsViewModel = ExtensionsViewModel()
@@ -74,18 +76,20 @@ struct listView: View {
             List {
                 ForEach(0..<links.count, id: \.self) { i in
                     Button(titles[i]) {
-                        viewModel.getDescription(from: links[i], for: titles[i]) { (value1, value2, value3) in
+                        viewModel.getDescription(from: links[i], for: titles[i]) { (value1, value2, value3, value4) in
                             sheetManager.whichSheet = value1
                             sheetManager.chapters = value2
                             sheetManager.chapter_numbers = value3
+                            sheetManager.cover = value4
                             sheetManager.showSheet.toggle()
+                            sheetManager.title = titles[i]
                         }
                     }
                 }
             }
             
             .sheet(isPresented: $sheetManager.showSheet, content: {
-                coverDetailView(viewModel: viewModel, model: model, description: sheetManager.whichSheet ?? "uhiuhiu", chapters: sheetManager.chapters!, chapter_numbers: sheetManager.chapter_numbers!)
+                coverDetailView(viewModel: viewModel, model: model, description: sheetManager.whichSheet ?? "uhiuhiu", chapters: sheetManager.chapters!, chapter_numbers: sheetManager.chapter_numbers!, cover: sheetManager.cover!, title: sheetManager.title!)
             })
         }
     }
@@ -96,16 +100,19 @@ struct coverDetailView: View {
     let model: LibraryViewModel
     let description: String
     let chapters: Array<String>
-    let chapter_numbers: Array<String>
+    let chapter_numbers: Array<Int>
+    let cover: String
+    let title: String
   //  @Binding var temp: Bool
     var body: some View {
             VStack {
                 Text(description)
                 ForEach(0..<chapters.count, id: \.self) { inx in
-                    Text(chapter_numbers[inx])
+                    Text(String(chapter_numbers[inx]))
                     Button("download") {
+                        viewModel.downloadCover(from: cover, for: title )
                         viewModel.getChapters(from: chapters[inx]) { value in
-                            model.addChapter(cover: "mangaPage", chapter: 1, description: description, genre: ["adventure"], filename: value)
+                            model.addChapter(cover: title, chapter: chapter_numbers[inx], description: description, genre: ["adventure"], filename: value)
                         }
                     }
                 }

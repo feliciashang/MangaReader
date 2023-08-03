@@ -50,7 +50,7 @@ struct Model {
             }
         
         else {
-            self.covers.append(Cover(id: covers.count + 1, cover: cover, chapters:[comics.count+1], description: description, genre: genre))
+            self.covers.append(Cover(id: covers.count + 1, cover: cover, chapters:[comics.count+1], description: description, downloaded: true, genre: genre))
             self.folders["ALL"]!.append(cover)
             self.comics.append(Comic(id: comics.count + 1, cover: cover, chapter: chapter, content: "", downloaded: true, filename: filename))
         }
@@ -122,6 +122,7 @@ struct Model {
         var cover: String
         var chapters: Array<Int>
         var description: String
+        var downloaded: Bool = false
         var genre: Array<String>
     }
     struct Comic: Identifiable {

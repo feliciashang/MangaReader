@@ -32,11 +32,16 @@ class ExtensionsViewModel: ObservableObject {
         extensions.downloadImage(from: page)
         
     }
-    func getDescription(from path: String, for title: String, completion: @escaping (String, Array<String>, Array<String>) -> Void) {
-        extensions.getDescription(from: path, for: title) {(value, value2, value3) in
+    
+    func downloadCover(from page: String, for title: String) {
+        extensions.downloadCover(from: page, for: title)
+    }
+    
+    func getDescription(from path: String, for title: String, completion: @escaping (String, Array<String>, Array<Int>, String) -> Void) {
+        extensions.getDescription(from: path, for: title) {(value, value2, value3, value4) in
             self.cover_description[title] = value
             self.description = value
-            completion(value, value2, value3)
+            completion(value, value2, value3, value4)
             return
         }
     }

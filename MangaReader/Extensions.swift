@@ -94,6 +94,26 @@ class Extensions {
        
     }
     
+    func downloadCover(from page: String, for title: String) {
+        let url = URL(string:page)
+        
+        print("Download Cover Started")
+        getData(from: url!) { data, response, error in
+            
+            guard let data = data, error == nil else { return }
+            
+          //  print(response?.suggestedFilename ?? url!.lastPathComponent)
+            print("Download Finished")
+            do {
+                try data.write(to: self.getDocumentsDirectory().appendingPathComponent(title + ".jpg"))
+                                 print("Image saved to: ",self.getDocumentsDirectory())
+            } catch {
+                print(error)
+            }
+        }
+       
+    }
+    
     func getMangaList(from path: String, completion: @escaping (Array<String>, Array<String>) -> Void)  {
         var links: Array<String> = []
         var titles: Array<String> = []
@@ -128,11 +148,12 @@ class Extensions {
         }
     }
 
-    func getDescription(from path: String, for title: String, completion: @escaping (String, Array<String>, Array<String>) -> Void) {
+    func getDescription(from path: String, for title: String, completion: @escaping (String, Array<String>, Array<Int>, String) -> Void) {
         var description = ""
         var genre: Array<String> = []
         var chapters: Array<String> = []
-        var chapter_num: Array<String> = []
+        var chapter_num: Array<Int> = []
+        var cover: String = ""
         AF.request( path, method: .get, encoding: URLEncoding.httpBody).responseData  { [self] response in
             switch response.result {
             case .success(let value):
@@ -153,17 +174,28 @@ class Extensions {
                         genre.append(try element.text())
                         
                     }
+
                     let chapter = try doc.getElementsByClass("eph-num")
                     let els: Elements = try chapter.select("a")
                     for el in els.array(){
                         chapters.append(try el.attr("href"))
                     }
-                    for el in els.array() {
-                        chapter_num.append(try el.getElementsByClass("chapternum").text())
+                    
+                    let chapter_class = try doc.getElementsByClass("eplister")
+                    let data_num: Elements = try chapter_class.select("li")
+                    for num in data_num.array() {
+                        print(try num.attr("data-num"))
+                        chapter_num.append(Int(try num.attr("data-num")) ?? 0)
+                        
                     }
+                   // print(chapter_num)
+                    let cover_class = try doc.getElementsByClass("bixbox animefull")
+                    let img: Elements = try cover_class.select("img")
+                    cover = try img.attr("src")
+                    print(cover)
                  //   print(genre)
                     onlineCovers.append(onlineCover(id: 0, title: title, links: path, description: description, genres: genre))
-                    completion(description, chapters, chapter_num)
+                    completion(description, chapters, chapter_num, cover)
                 } catch Exception.Error(let type, let message) {
                   //  print(message)
                 } catch {
