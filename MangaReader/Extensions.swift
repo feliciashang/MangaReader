@@ -4,6 +4,10 @@
 //
 //  Created by Felicia Shang on 2023-07-24.
 //
+extension String
+{
+    var digitString: String { filter { ("0"..."9").contains($0) } }
+}
 
 import Foundation
 import Alamofire
@@ -11,41 +15,11 @@ import SwiftyJSON
 import SwiftSoup
 
 class Extensions {
-    var pages: Array<Page> = Array<Page>()
-    var display_links: Array<String> = Array<String>()
-    var onlineCovers: Array<onlineCover> = Array<onlineCover>()
+    var pages: Array<String> = Array<String>()
     @IBOutlet var imageView : UIImageView?
     
-  //  let path:String = "https://asura.gg/2226495089-my-daughter-is-a-dragon-chapter-0/"
     
-    init() {
-//        AF.request( path, method: .get, encoding: URLEncoding.httpBody).responseData  { [self] response in
-//            switch response.result {
-//            case .success(let value):
-//                let data = value
-//                let html: String = String(data:data, encoding: .utf8)!
-//                do {
-//                    let doc: Document = try SwiftSoup.parseBodyFragment(html)
-//                    let images = try doc.getElementsByClass("rdminimal")
-//                    var inx = 0
-//                    for element in try images.select("img").array(){
-//                        pages.append(Page(id: inx, url: try element.attr("src")) )
-//                        inx += 1
-//                    }
-//                } catch Exception.Error(let type, let message) {
-//                  //  print(message)
-//                } catch {
-//                  //  print("error")
-//                }
-//
-//
-//            case .failure(let error):
-//                print(error)
-//            }
-//        }
-    }
-    
-    func getChapters(from path: String, completion: @escaping (Array<Page>)  -> Void) {
+    func getChapters(from path: String, completion: @escaping (Array<String>)  -> Void) {
         AF.request( path, method: .get, encoding: URLEncoding.httpBody).responseData  { [self] response in
             switch response.result {
             case .success(let value):
@@ -54,10 +28,8 @@ class Extensions {
                 do {
                     let doc: Document = try SwiftSoup.parseBodyFragment(html)
                     let images = try doc.getElementsByClass("rdminimal")
-                    var inx = 0
                     for element in try images.select("img").array(){
-                        pages.append(Page(id: inx, url: try element.attr("src")) )
-                        inx += 1
+                        pages.append(try element.attr("src"))
                     }
                     completion(pages)
                 } catch Exception.Error(let type, let message) {
@@ -74,8 +46,8 @@ class Extensions {
         URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
     }
     
-    func downloadImage(from page: Page) {
-        let url = URL(string:page.url)
+    func downloadImage(from page: String) {
+        let url = URL(string:page)
         
         print("Download Started")
         getData(from: url!) { data, response, error in
@@ -148,7 +120,7 @@ class Extensions {
         }
     }
 
-    func getDescription(from path: String, for title: String, completion: @escaping (String, Array<String>, Array<Int>, String) -> Void) {
+    func getDescription(from path: String, for title: String, completion: @escaping (String, Array<String>, Array<Int>, String, Array<String>) -> Void) {
         var description = ""
         var genre: Array<String> = []
         var chapters: Array<String> = []
@@ -184,18 +156,15 @@ class Extensions {
                     let chapter_class = try doc.getElementsByClass("eplister")
                     let data_num: Elements = try chapter_class.select("li")
                     for num in data_num.array() {
-                        print(try num.attr("data-num"))
-                        chapter_num.append(Int(try num.attr("data-num")) ?? 0)
+                       
+                        chapter_num.append(Int(try num.attr("data-num").components(separatedBy: " ").first!.digitString) ?? 0)
                         
                     }
                    // print(chapter_num)
                     let cover_class = try doc.getElementsByClass("bixbox animefull")
                     let img: Elements = try cover_class.select("img")
                     cover = try img.attr("src")
-                    print(cover)
-                 //   print(genre)
-                    onlineCovers.append(onlineCover(id: 0, title: title, links: path, description: description, genres: genre))
-                    completion(description, chapters, chapter_num, cover)
+                    completion(description, chapters, chapter_num, cover, genre)
                 } catch Exception.Error(let type, let message) {
                   //  print(message)
                 } catch {
@@ -216,23 +185,6 @@ class Extensions {
            
            return paths[0]
        }
-    
-    
-    
-    struct Page: Identifiable, Hashable {
-        var id: Int
-        
-        let url: String
-       // let number: Int
-    }
-    
-    struct onlineCover: Identifiable {
-        var id: Int
-        var title: String
-        var links: String
-        var description: String = ""
-        var genres: Array<String> = []
-    }
     
     
 }
