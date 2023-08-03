@@ -43,7 +43,7 @@ struct asuraView: View {
     @State var links: Array<String> = []
     var body: some View {
         NavigationView {
-            List {
+           
                 Button("view popular things") {
                     viewModel.getMangaList(from: "https://asura.gg/manga/?page=1&order=update") { (value1, value2) in
                         titles = value2
@@ -51,12 +51,14 @@ struct asuraView: View {
                         changed = true
                     }
                 }
-                NavigationLink(destination: listView(viewModel: viewModel, model: model, titles: $titles, links: $links), label: {
-                    Text("click to navigate popular things")
-                })
+                NavigationLink(destination: listView(viewModel: viewModel, model: model, titles: $titles, links: $links), isActive: $changed
+                   // Text("click to navigate popular things")
+                ) {
+                    EmptyView()
+                }
             }
                 
-            }
+            
         }
     }
     
