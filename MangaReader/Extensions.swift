@@ -16,9 +16,36 @@ class Extensions {
     var onlineCovers: Array<onlineCover> = Array<onlineCover>()
     @IBOutlet var imageView : UIImageView?
     
-    let path:String = "https://asura.gg/2226495089-my-daughter-is-a-dragon-chapter-0/"
+  //  let path:String = "https://asura.gg/2226495089-my-daughter-is-a-dragon-chapter-0/"
     
     init() {
+//        AF.request( path, method: .get, encoding: URLEncoding.httpBody).responseData  { [self] response in
+//            switch response.result {
+//            case .success(let value):
+//                let data = value
+//                let html: String = String(data:data, encoding: .utf8)!
+//                do {
+//                    let doc: Document = try SwiftSoup.parseBodyFragment(html)
+//                    let images = try doc.getElementsByClass("rdminimal")
+//                    var inx = 0
+//                    for element in try images.select("img").array(){
+//                        pages.append(Page(id: inx, url: try element.attr("src")) )
+//                        inx += 1
+//                    }
+//                } catch Exception.Error(let type, let message) {
+//                  //  print(message)
+//                } catch {
+//                  //  print("error")
+//                }
+//
+//
+//            case .failure(let error):
+//                print(error)
+//            }
+//        }
+    }
+    
+    func getChapters(from path: String, completion: @escaping (Array<Page>)  -> Void) {
         AF.request( path, method: .get, encoding: URLEncoding.httpBody).responseData  { [self] response in
             switch response.result {
             case .success(let value):
@@ -32,19 +59,17 @@ class Extensions {
                         pages.append(Page(id: inx, url: try element.attr("src")) )
                         inx += 1
                     }
+                    completion(pages)
                 } catch Exception.Error(let type, let message) {
                   //  print(message)
                 } catch {
                   //  print("error")
                 }
-               
-                
             case .failure(let error):
                 print(error)
             }
         }
     }
-    
     func getData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()){
         URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
     }
@@ -103,9 +128,11 @@ class Extensions {
         }
     }
 
-    func getDescription(from path: String, for title: String, completion: @escaping (String) -> Void) {
+    func getDescription(from path: String, for title: String, completion: @escaping (String, Array<String>, Array<String>) -> Void) {
         var description = ""
         var genre: Array<String> = []
+        var chapters: Array<String> = []
+        var chapter_num: Array<String> = []
         AF.request( path, method: .get, encoding: URLEncoding.httpBody).responseData  { [self] response in
             switch response.result {
             case .success(let value):
@@ -126,9 +153,17 @@ class Extensions {
                         genre.append(try element.text())
                         
                     }
-                    print(genre)
+                    let chapter = try doc.getElementsByClass("eph-num")
+                    let els: Elements = try chapter.select("a")
+                    for el in els.array(){
+                        chapters.append(try el.attr("href"))
+                    }
+                    for el in els.array() {
+                        chapter_num.append(try el.getElementsByClass("chapternum").text())
+                    }
+                 //   print(genre)
                     onlineCovers.append(onlineCover(id: 0, title: title, links: path, description: description, genres: genre))
-                    completion(description)
+                    completion(description, chapters, chapter_num)
                 } catch Exception.Error(let type, let message) {
                   //  print(message)
                 } catch {

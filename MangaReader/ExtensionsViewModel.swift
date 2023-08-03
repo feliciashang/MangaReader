@@ -17,7 +17,8 @@ class ExtensionsViewModel: ObservableObject {
     
     var links:Array<String> = Array<String>()
     var titles:Array<String> = Array<String>()
-    var cover_description: String = ""
+    var description: String = ""
+    var cover_description: Dictionary<String, String> = Dictionary<String, String>()
     var pages:Array<Extensions.Page> {
         return extensions.pages
     }
@@ -31,15 +32,31 @@ class ExtensionsViewModel: ObservableObject {
         extensions.downloadImage(from: page)
         
     }
-    func getDescription(from path: String, for title: String, completion: @escaping (String) -> Void) {
-        extensions.getDescription(from: path, for: title) {(value) in
-            self.cover_description = value
-            completion(value)
+    func getDescription(from path: String, for title: String, completion: @escaping (String, Array<String>, Array<String>) -> Void) {
+        extensions.getDescription(from: path, for: title) {(value, value2, value3) in
+            self.cover_description[title] = value
+            self.description = value
+            completion(value, value2, value3)
             return
         }
     }
     var onlineCovers: Array<Extensions.onlineCover> {
         return extensions.onlineCovers
+    }
+    func getChapters(from path: String, completion: @escaping (Array<String>) -> Void) {
+        var array: Array<String> = []
+        extensions.getChapters(from: path) {(value) in
+            for page in value {
+                self.downloadImage(from: page)
+                let lastComponent = page.url.components(separatedBy: "/").last ?? "cdc"
+                if lastComponent != "ENDING-PAGE.jpg" {
+                    array.append(lastComponent)
+                }
+                
+            }
+            completion(array)
+            //completion(value)
+        }
     }
     
 //    func getTitles() -> String {
@@ -52,7 +69,7 @@ class ExtensionsViewModel: ObservableObject {
             
             self.links = value1
             self.titles = value2
-            print(self.titles)
+         //   print(self.titles)
           //  getTitles()
             completion(value1, value2)
             
