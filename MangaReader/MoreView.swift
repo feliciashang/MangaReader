@@ -41,26 +41,28 @@ struct asuraView: View {
     @State var changed: Bool = false
     @State var titles: Array<String> = []
     @State var links: Array<String> = []
+    @State var page: Int = 1
     var body: some View {
         NavigationView {
-           
+            List {
                 Button("view popular things") {
-                    viewModel.getMangaList(from: "https://asura.gg/manga/?page=1&order=update") { (value1, value2) in
+                    viewModel.getMangaList(from: "https://asura.gg/manga/?page=\(page)") { (value1, value2) in
                         titles = value2
                         links = value1
                         changed = true
                     }
                 }
-                NavigationLink(destination: listView(viewModel: viewModel, model: model, titles: $titles, links: $links), isActive: $changed
-                   // Text("click to navigate popular things")
+            }.background (
+                NavigationLink(destination: listView(viewModel: viewModel, model: model, titles: $titles, links: $links, page: $page), isActive: $changed
+                               // Text("click to navigate popular things")
                 ) {
                     EmptyView()
                 }
-            }
-                
-            
+                    .hidden()
+            )
         }
     }
+}
     
 
 
@@ -70,23 +72,42 @@ struct listView: View {
     @Binding var titles: Array<String>
     @Binding var links: Array<String>
     @StateObject var sheetManager = SheetMananger()
-    
+    @Binding var page: Int
     var body: some View {
         NavigationView {
-            List {
-                ForEach(0..<links.count, id: \.self) { i in
-                    Button(titles[i]) {
-                        viewModel.getDescription(from: links[i], for: titles[i]) { (value1, value2, value3, value4, value5) in
-                            sheetManager.whichSheet = value1
-                            sheetManager.chapters = value2
-                            sheetManager.chapter_numbers = value3
-                            sheetManager.cover = value4
-                            sheetManager.genre = value5
-                            sheetManager.showSheet.toggle()
-                            sheetManager.title = titles[i]
+            VStack {
+                List {
+                    ForEach(0..<links.count, id: \.self) { i in
+                        Button(titles[i]) {
+                            viewModel.getDescription(from: links[i], for: titles[i]) { (value1, value2, value3, value4, value5) in
+                                sheetManager.whichSheet = value1
+                                sheetManager.chapters = value2
+                                sheetManager.chapter_numbers = value3
+                                sheetManager.cover = value4
+                                sheetManager.genre = value5
+                                sheetManager.showSheet.toggle()
+                                sheetManager.title = titles[i]
+                            }
                         }
                     }
                 }
+                HStack {
+                    Button("Back") {
+                        page -= 1
+                        viewModel.getMangaList(from: "https://asura.gg/manga/?page=\(page)") { (value1, value2) in
+                            titles = value2
+                            links = value1
+                        }
+                    }
+                    Spacer()
+                    Button("Next") {
+                        page += 1
+                        viewModel.getMangaList(from: "https://asura.gg/manga/?page=\(page)") { (value1, value2) in
+                            titles = value2
+                            links = value1
+                        }
+                    }
+                }.padding()
             }
             
             .sheet(isPresented: $sheetManager.showSheet, content: {
