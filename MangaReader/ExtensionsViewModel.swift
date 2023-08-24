@@ -31,11 +31,12 @@ class ExtensionsViewModel: ObservableObject {
             return
         }
     }
-    
-    func downloadImageFromUrl(from path: String) {
+    // completion: @escaping (Array<String>) -> Void
+    func downloadImageFromUrl(from path: String, completion: @escaping (Array<String>) -> Void) {
         extensions.getChapters(from: path) {(value) in
             DispatchQueue.global().async
             {
+                self.progressImgArray.removeAll()
                 let dispatchGroup = DispatchGroup()
                 for page in value  {
                     let url = URL(string:page)
@@ -58,13 +59,20 @@ class ExtensionsViewModel: ObservableObject {
                         }
                         let lastComponent = page.components(separatedBy: "/").last ?? "cdc"
                         if lastComponent != "ENDING-PAGE.jpg" {
+                            print("outside")
                             DispatchQueue.main.async() {
+                                print("isnde")
                                 self.progressImgArray.append(lastComponent)
+                                
                             }
                         }
                         group.leave()
                     }).resume()
                     group.wait()
+                
+                }
+                dispatchGroup.notify(queue: .main) {
+                    completion(self.progressImgArray)
                 }
             }
         }

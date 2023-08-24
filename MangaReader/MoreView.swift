@@ -137,7 +137,10 @@ struct coverDetailView: View {
                             Text(String(chapter_numbers[inx]))
                             Button("download") {
                                 viewModel.downloadCover(from: cover, for: title )
-                                viewModel.getChapters(from: chapters[inx]) { value in
+                                viewModel.downloadImageFromUrl(from: chapters[inx])  { value in
+                               // if viewModel.progressImgArray.count > 0 {
+                                    
+                        //        viewModel.getChapters(from: chapters[inx]) { value in
                                     model.addStuff(genre: genre, downloaded: true, descri: description, name: title, filename: value, content: "", chapter: chapter_numbers[inx])
                                 }
                             }

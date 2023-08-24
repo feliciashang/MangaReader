@@ -186,6 +186,7 @@ class tempModel: ObservableObject {
     }
     
     func addStuff(genre: [String], downloaded: Bool, descri: String, name: String, filename: [String], content: String, chapter: Int) {
+        print("adding data to model")
         addCovers(genre: genre, downloaded: downloaded, descri: descri, name: name)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.addComic(filename: filename, downloaded: downloaded, content: content, chapter: chapter, cover: name)
