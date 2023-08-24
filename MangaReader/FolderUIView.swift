@@ -32,17 +32,17 @@ struct FolderUIView: View {
                 Text("new")
             }
             ScrollView {
-                Button(action: {print(folderviewModel.folders.keys)}) {
+                Button(action: {print(folderviewModel.folders)}) {
                     
                     Text("click for folders")
                 }
                // List{
-                    ForEach (Array(folderviewModel.folders.keys) ,id: \.self) { folder in
-                        Button(action: {folderviewModel.addComic(new_comic: comic ?? "Ending Maker", add_to_folder: folder)}) {
-                            Text(folder)
-                        }
-                 //   }
-                }
+//                    ForEach (Array(folderviewModel.folders) ,id: \.self) { folder in
+//                        Button(action: {folderviewModel.addComic(new_comic: comic ?? "Ending Maker", add_to_folder: folder)}) {
+//                            Text(folder)
+//                        }
+//                 //   }
+//                }
             }
         }
     }
@@ -54,7 +54,7 @@ struct FolderUIView: View {
         HStack {
             TextField("Enter New Folder Name", text: $newFolder)
             AnimatedActionButton(title: "Enter" ) {
-                folderviewModel.addFolder(newFolder)
+             //   folderviewModel.addFolder(newFolder)
             }
         }
     }

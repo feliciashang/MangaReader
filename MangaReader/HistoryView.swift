@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct HistoryView: View {
-    @EnvironmentObject  var viewModel: LibraryViewModel
+    @EnvironmentObject  var viewModel: tempModel
     var body: some View {
-        
+
         NavigationView {
             List{
-                ForEach(Array(viewModel.timestamps.keys), id: \.self) { id in
-                    timeView(id: id, viewModel: viewModel, time: viewModel.timestamps[id]!)
+                ForEach(Array(viewModel.savedHistory), id: \.self) { history in
+                    timeView(viewModel: viewModel, history: history)
                 }
             }.toolbar {
                 ToolbarItem(placement: .navigationBarLeading){
@@ -27,15 +27,14 @@ struct HistoryView: View {
 }
 
 struct timeView: View {
-    var id: Int
-    var viewModel: LibraryViewModel
-    var time: String
-    
+    var viewModel: tempModel
+    var history: History
+
     var body: some View {
-            NavigationLink(destination: ContentView(comic: viewModel.findComic(chapterId: id), viewModel: viewModel), label: {
-                Text(time)
-                Text("Chapter: \(viewModel.findComic(chapterId: id).chapter)")
-                Image(viewModel.findComic(chapterId: id).cover)
+        NavigationLink(destination: ContentView(comic: viewModel.getComicfromID(id: Int(history.id)), viewModel: viewModel), label: {
+            Text(history.time ?? " ")
+            Text("Chapter: \(viewModel.getComicfromID(id: Int(history.id)).chapter)")
+            Image((viewModel.getComicfromID(id: Int(history.id)).cover?.cover)!)
                     .resizable()
                     .frame(maxWidth: 30, maxHeight: 45)
 
@@ -43,7 +42,7 @@ struct timeView: View {
 
     }
 }
-
+//
 //struct HistoryView_Previews: PreviewProvider {
 //    static var previews: some View {
 //        let viewModel = LibraryViewModel()

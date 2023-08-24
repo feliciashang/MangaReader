@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="22A400" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Comic" representedClassName="Comic" syncable="YES" codeGenerationType="class">
+        <attribute name="chapter" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="content" optional="YES" attributeType="String"/>
+        <attribute name="downloaded" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="filename" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData" customClassName="[String]"/>
+        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="cover" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Cover" inverseName="chapters" inverseEntity="Cover"/>
+    </entity>
+    <entity name="Cover" representedClassName="Cover" syncable="YES" codeGenerationType="class">
+        <attribute name="cover" optional="YES" attributeType="String"/>
+        <attribute name="descri" optional="YES" attributeType="String"/>
+        <attribute name="downloaded" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="genre" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData" customClassName="[String]"/>
+        <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="chapters" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Comic" inverseName="cover" inverseEntity="Comic"/>
+        <relationship name="folder" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Folder" inverseName="covers" inverseEntity="Folder"/>
+    </entity>
+    <entity name="Folder" representedClassName="Folder" syncable="YES" codeGenerationType="class">
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="covers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Cover" inverseName="folder" inverseEntity="Cover"/>
+    </entity>
+    <entity name="History" representedClassName="History" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="time" optional="YES" attributeType="String"/>
+    </entity>
+</model>

@@ -9,14 +9,14 @@ import SwiftUI
 
 
 struct ComicDetailView: View {
-    var comic: Model.Cover
+    var comic: Cover
     @State var isViewed = false
-    @ObservedObject var viewModel: LibraryViewModel
+    @ObservedObject var viewModel: tempModel
     //var mal: Tracker = Tracker()
     let cornerRadiusCard: CGFloat = 20
     var body: some View {
         VStack(alignment: .leading) {
-            Text(comic.cover)
+            Text(comic.cover!)
                 .fontWeight(.semibold)
                 .font(.title)
                 .padding(.horizontal)
@@ -25,7 +25,7 @@ struct ComicDetailView: View {
                 Text("Synopsis:")
                     .font(.subheadline)
                 
-                Text(comic.description)
+                Text(comic.descri ?? " ")
                     .multilineTextAlignment(.leading)
                     .lineLimit(isViewed ? 15 : 5)
                     .font(.system(size: 12))
@@ -35,18 +35,22 @@ struct ComicDetailView: View {
                 .font(.system(size: 10, weight: .semibold))
             } .padding(.horizontal)
             HStack {
-                ForEach(comic.genre, id: \.self) { cur_genre in
-                    genreView(genre: cur_genre)
+                if comic.genre!.count > 0 {
+                    ForEach(Array(comic.genre ?? [""]), id: \.self) { cur_genre in
+                        genreView(genre: cur_genre)
+                    }
                 }
             } .padding(.horizontal)
             HStack {
-                Button(action: {viewModel.addTracker(name: comic.cover) }){
+                Button(action: {viewModel.addTracker(name: comic.cover!) }){
                     Label("Tracking", systemImage:"plus")
                 }
             }
             List{
-                ForEach(comic.chapters, id: \.self) { ids in
-                    chapterView(viewModel: viewModel, chapter: viewModel.findComic(chapterId: ids))
+                if (comic.chapters!.count > 0) {
+                    ForEach((comic.chapters?.allObjects as? [Comic])!, id: \.self) { ids in
+                        chapterView(viewModel: viewModel, chapter: ids)
+                    }
                 }
             }
         }
@@ -63,8 +67,8 @@ struct genreView: View {
     }
 }
 struct chapterView: View {
-    let viewModel: LibraryViewModel
-    let chapter: Model.Comic
+    let viewModel: tempModel
+    let chapter: Comic
     var body: some View {
         NavigationLink(destination: ContentView(comic: chapter, viewModel: viewModel), label: {
             Text("Chapter \(chapter.chapter)")
@@ -72,11 +76,11 @@ struct chapterView: View {
     }
 }
 
-struct ComicDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        let viewModel = LibraryViewModel()
-
-        let comic = Model.Cover(id:1, cover: "Ending Maker", chapters:[2,3,4], description: "There are two people who were obssessed with the game, Legend of Heroes 2, and spent thousands of hours on it.The forever number one, Kang Jinho, and the forever number two, Hong Yoohee.One day, when they woke up, they had been reincarnated into their characters within the game…“Hey… You too?”“Hey… Me too!”Legend of Heroes 2’s ending is the end of the human world.However, since there are two of them instead of just one, and not just any two, but the server’s rank one and rank two, things could be different.The journey of the veteran gamers to accomplish the happy ending starts now!", genre: ["Romance", "Video games", "Action"])
-        ComicDetailView(comic: comic, viewModel:viewModel)
-    }
-}
+//struct ComicDetailView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        let viewModel = LibraryViewModel()
+//
+//        let comic = Cover(id:1, cover: "Ending Maker", chapters:[2,3,4], description: "There are two people who were obssessed with the game, Legend of Heroes 2, and spent thousands of hours on it.The forever number one, Kang Jinho, and the forever number two, Hong Yoohee.One day, when they woke up, they had been reincarnated into their characters within the game…“Hey… You too?”“Hey… Me too!”Legend of Heroes 2’s ending is the end of the human world.However, since there are two of them instead of just one, and not just any two, but the server’s rank one and rank two, things could be different.The journey of the veteran gamers to accomplish the happy ending starts now!", genre: ["Romance", "Video games", "Action"])
+//        ComicDetailView(comic: comic, viewModel:viewModel)
+//    }
+//}

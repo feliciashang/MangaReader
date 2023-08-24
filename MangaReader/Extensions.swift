@@ -31,6 +31,7 @@ class Extensions {
                     for element in try images.select("img").array(){
                         pages.append(try element.attr("src"))
                     }
+                    print(pages)
                     completion(pages)
                 } catch Exception.Error(let type, let message) {
                   //  print(message)
@@ -45,6 +46,8 @@ class Extensions {
     func getData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()){
         URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
     }
+    
+    @Published var image: OnlineImage = .none
     
     func downloadImage(from page: String) {
         let url = URL(string:page)
@@ -64,6 +67,39 @@ class Extensions {
             }
         }
        
+    }
+    
+    
+    enum OnlineImage {
+        case none
+        case fetching(URL)
+        case found(UIImage)
+        case failed(String)
+        
+        var uiImage: UIImage? {
+            switch self {
+            case .found(let uiImage): return uiImage
+            default: return nil
+            }
+        }
+        
+        var urlBeingFetched: URL? {
+            switch self {
+            case .fetching(let url): return url
+            default: return nil
+            }
+        }
+        
+        var isFetching: Bool {
+            urlBeingFetched != nil
+        }
+        
+        var failureReason: String? {
+            switch self {
+            case .failed(let reason): return reason
+            default: return nil
+            }
+        }
     }
     
     func downloadCover(from page: String, for title: String) {
@@ -180,7 +216,7 @@ class Extensions {
         
     }
     
-    private func getDocumentsDirectory() -> URL {
+     func getDocumentsDirectory() -> URL {
            let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
            
            return paths[0]

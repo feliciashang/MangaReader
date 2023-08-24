@@ -14,7 +14,7 @@ class ExtensionsViewModel: ObservableObject {
     }
     
     @Published private var extensions: Extensions = ExtensionsViewModel.createExtension()
-    
+    var progressImgArray: [String] = []
     
     func downloadImage(from page: String) {
         extensions.downloadImage(from: page)
@@ -31,6 +31,47 @@ class ExtensionsViewModel: ObservableObject {
             return
         }
     }
+    
+    func downloadImageFromUrl(from path: String) {
+        extensions.getChapters(from: path) {(value) in
+            DispatchQueue.global().async
+            {
+                let dispatchGroup = DispatchGroup()
+                for page in value  {
+                    let url = URL(string:page)
+                    let group = DispatchGroup()
+                    print("Download Started")
+                    print(url)
+                    print("-------GROUP ENTER-------")
+                    group.enter()
+                    URLSession.shared.dataTask(with: url!, completionHandler: { data, response, error  in
+                        
+                        guard let data = data, error == nil else { return }
+                        
+                        print(response?.suggestedFilename ?? url!.lastPathComponent)
+                        print("Download Finished")
+                        do {
+                            try data.write(to: self.extensions.getDocumentsDirectory().appendingPathComponent(response?.suggestedFilename ?? url!.lastPathComponent))
+                            print("Image saved to: ",self.extensions.getDocumentsDirectory())
+                        } catch {
+                            print(error)
+                        }
+                        let lastComponent = page.components(separatedBy: "/").last ?? "cdc"
+                        if lastComponent != "ENDING-PAGE.jpg" {
+                            DispatchQueue.main.async() {
+                                self.progressImgArray.append(lastComponent)
+                            }
+                        }
+                        group.leave()
+                    }).resume()
+                    group.wait()
+                }
+            }
+        }
+    }
+    
+    
+    
     
     func getChapters(from path: String, completion: @escaping (Array<String>) -> Void) {
         var array: Array<String> = []

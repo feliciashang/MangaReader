@@ -10,7 +10,7 @@ import SwiftUI
 struct HomeView: View {
     @State var selectedView: Int = 1
     
-    @StateObject var viewModel: LibraryViewModel = LibraryViewModel()
+    @StateObject var viewModel: tempModel = tempModel()
     @ObservedObject var folderViewModel = FolderViewModel()
     
     var body: some View {

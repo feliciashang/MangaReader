@@ -8,15 +8,15 @@
 import SwiftUI
 
 struct LibraryView: View {
-    @EnvironmentObject  var viewModel: LibraryViewModel
+    @EnvironmentObject  var viewModel: tempModel
     @State private var searchText = ""
     @State private var selectedTab: Int = 0
-    @State var folders: [String] = ["ALL"]
+ //   @State var folders: [String] = ["ALL"]
     
     func tabs() -> [Tab]{
         var tabs: [Tab] = []
-        for name in viewModel.folders.keys {
-            tabs.append(.init(title: name))
+        for folder in viewModel.savedFolders {
+            tabs.append(.init(title: folder.name!))
         }
         return tabs
     }
@@ -29,9 +29,12 @@ struct LibraryView: View {
                         content: {
                         ScrollView {
                             LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]){
-                                ForEach(searchResults(folder: tabs()[selectedTab].title), id: \.self) { cover in
-                                    coverView(comic: cover, folders: $folders).aspectRatio(2/3, contentMode: .fit)
-                                    
+                              //  searchResults(folder: tabs()[selectedTab].title
+                                if tabs().count > 0 && viewModel.savedFolders != [] && searchResults(folder: tabs()[selectedTab].title).count > 0 {
+                                    ForEach(searchResults(folder: tabs()[selectedTab].title), id: \.self) { cover in
+                                        coverView(comic: cover).aspectRatio(2/3, contentMode: .fit)
+                                        
+                                    }
                                 }
                             }}.tag(0).padding(.horizontal)
                     }).tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
@@ -56,55 +59,69 @@ struct LibraryView: View {
     
     
     func searchResults(folder: String) -> [String] {
-            if searchText.isEmpty {
-                return viewModel.folders[folder]!
-            } else {
-                
-                return viewModel.folders[folder]!.filter {
-                    $0.range(of: searchText, options: .caseInsensitive) != nil
+        var output: [String] = []
+        if searchText.isEmpty {
+             let covers  =  viewModel.getCoverfromFolder(folder: folder)
+                for cov in covers {
+                    output.append(cov.cover!)
                 }
-            }
+          
+            return output
+            
+        }
+        return output
+//            } else {
+//
+//                return viewModel.folders[folder]!.filter {
+//                    $0.range(of: searchText, options: .caseInsensitive) != nil
+//                }
+//            }
         }
 }
 
 struct coverView: View {
-    @EnvironmentObject  var viewModel: LibraryViewModel
+    @EnvironmentObject  var viewModel: tempModel
     let comic: String
     @State var isAdding = false
     @State var newFolder: String = ""
-    @Binding var folders: [String]
+    //var folders: [String]
     var body: some View {
-        NavigationLink(destination: ComicDetailView(comic: viewModel.findCover(comic), viewModel: viewModel), label: {
-            if viewModel.findCover(comic).downloaded == false {
-                Image(comic)
-                    .renderingMode(.original)
-                    .resizable()
-                    .contextMenu() {
-                        contextMenu
-                    }.alert("Enter new folder name", isPresented: $isAdding) {
-                        TextField("Enter your name", text: $newFolder)
-                        Button("OK", action: submit)
-                        Button("Cancel"){}
+        if let c = viewModel.getCover(name: comic) {
+            NavigationLink(destination: ComicDetailView(comic: c, viewModel: viewModel), label: {
+                if (c.downloaded == false){
+                    Image(comic)
+                        .renderingMode(.original)
+                        .resizable()
+                        .contextMenu() {
+                            contextMenu
+                        }.alert("Enter new folder name", isPresented: $isAdding) {
+                            TextField("Enter your name", text: $newFolder)
+                            Button("OK", action: submit)
+                            Button("Cancel"){}
+                        }
+                } else {
+                    if let b = viewModel.load(fileName: comic+".jpg") {
+                        
+                        Image(uiImage: b)
+                            .renderingMode(.original)
+                            .resizable()
+                            .contextMenu() {
+                                contextMenu
+                            }.alert("Enter new folder name", isPresented: $isAdding) {
+                                TextField("Enter your name", text: $newFolder)
+                                Button("OK", action: submit)
+                                Button("Cancel"){}
+                            }
                     }
-            } else {
-                Image(uiImage: viewModel.load(fileName: comic+".jpg")!)
-                    .renderingMode(.original)
-                    .resizable()
-                    .contextMenu() {
-                        contextMenu
-                    }.alert("Enter new folder name", isPresented: $isAdding) {
-                        TextField("Enter your name", text: $newFolder)
-                        Button("OK", action: submit)
-                        Button("Cancel"){}
-                    }
-            }
-        })
+                }
+            })
+        }
     }
     
     func submit() {
-        viewModel.addFolder(newFolder)
-        folders.append(newFolder)
-        }
+        viewModel.addFolder(name: newFolder)
+      //  folders.append(newFolder)
+    }
     
     var contextMenu: some View {
         Section("Add to Folder") {
@@ -112,12 +129,12 @@ struct coverView: View {
                 Text("New")
                 Image(systemName: "plus")
             }
-            ForEach (folders ,id: \.self) { folder in
-                Button(action: {viewModel.addComic(new_comic:viewModel.findCover(comic).cover, add_to_folder: folder)}) {
-                        Text(folder)
+            ForEach (viewModel.savedFolders ,id: \.self) { folder in
+                Button(action: {viewModel.addToFolder(addTo: viewModel.getFolder(name: folder.name ?? "ALL") ?? viewModel.savedFolders[0], cover: viewModel.getCover(name: comic) ?? viewModel.savedCovers[0])}) {
+                    Text(folder.name ?? "ALL")
                 }
             }
-        }.id(folders.count)
+        }.id(viewModel.savedFolders.count)
     }
 }
 

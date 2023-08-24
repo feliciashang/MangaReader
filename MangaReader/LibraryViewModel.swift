@@ -6,9 +6,22 @@
 //
 
 import SwiftUI
+import CoreData
 
 class LibraryViewModel: ObservableObject {
     
+    let container: NSPersistentContainer
+    
+    init() {
+        container = NSPersistentContainer(name: "Model")
+        container.loadPersistentStores{( description, error) in
+            if let error = error {
+                print("ERROR-LOADING CORE DATA. \(error)")
+            } else {
+                print("Successfully loaded core data!")
+            }
+        }
+    }
     private static func createModel() -> Model {
         Model()
     }
@@ -16,8 +29,8 @@ class LibraryViewModel: ObservableObject {
     @Published private var model: Model = LibraryViewModel.createModel()
     
     
-    var comics:Array<Model.Comic> {
-        return model.comics
+    var comics:Array<Comic> {
+        return model.savedComics
     }
     
 //    var chapterList: Dictionary<String, Array<Int>> {
@@ -26,16 +39,16 @@ class LibraryViewModel: ObservableObject {
     
     var coverList: Array<String> {
         var output = Array<String>()
-        for item in model.covers {
-            output.append(item.cover)
+        for item in model.savedCovers {
+            output.append(item.cover!)
         }
         return output
     }
     
-    func findComic(chapterId id: Int) -> Model.Comic{
+    func findComic(chapterId id: Int) -> Comic{
         return model.findComic(comicId: id)
     }
-    func findCover(_ cover: String) -> Model.Cover{
+    func findCover(_ cover: String) -> Cover{
         return model.findCover(cover)
     }
     
@@ -44,33 +57,39 @@ class LibraryViewModel: ObservableObject {
         return model.timestamps
     }
     
-    var covers:Array<Model.Cover> {
-        return model.covers
+    var covers:Array<Cover> {
+        return model.savedCovers
     }
     
-    func choose(_ comic: Model.Comic) ->Void {
+    func choose(_ comic: Comic) ->Void {
         model.choose(comic)
     }
     
-    var folders: Dictionary<String, Array<String>> {
-        return model.folders
+    var folders: Array<Folder> {
+        return model.savedFolders
     }
     
     func addTracker(name: String) {
         model.addTracker(name: name)
     }
     
-    func addComic(new_comic comic: String, add_to_folder folder: String) {
-        model.addComic(new_comic: comic, add_to_folder: folder)
+    func addFolder(add_to_folder folder: String) {
+        model.addFolder(name: folder)
     }
     
-    func addFolder(_ folder: String) {
-        model.addFolder(folder)
+//    func addFolder(_ folder: String) {
+//        model.addFolder(folder)
+//    }
+    
+    func addChapter(cover: Cover, chapter: Int, description: String, genre: Array<String>, filename: [String]) {
+        model.addComic(filename: filename, downloaded: true, content:"" , chapter: chapter, cover: cover)
     }
     
-    func addChapter(cover: String, chapter: Int, description: String, genre: Array<String>, filename: Array<String>) {
-        model.addChapter(cover: cover, chapter: chapter, description: description, genre: genre, filename: filename)
+    func addCovers(genre: [String], downloaded: Bool, descri: String, cover: String, folder: Folder) {
+        model.addCovers(genre: genre, downloaded: downloaded, descri: descri, cover: cover, folder: folder)
     }
+    
+    
     
     func load(fileName: String) -> UIImage? {
         model.load(fileName: fileName)

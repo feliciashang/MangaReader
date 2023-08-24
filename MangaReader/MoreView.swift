@@ -17,7 +17,7 @@ class SheetMananger: ObservableObject{
     @Published var genre: Array<String>? = nil
 }
 struct MoreView: View {
-    @EnvironmentObject  var viewModel: LibraryViewModel
+    @EnvironmentObject  var viewModel: tempModel
     @ObservedObject var extensionsViewModel = ExtensionsViewModel()
     var body: some View {
         NavigationView {
@@ -37,7 +37,7 @@ struct MoreView: View {
 
 struct asuraView: View {
     let viewModel: ExtensionsViewModel
-    let model: LibraryViewModel
+    let model: tempModel
     @State var changed: Bool = false
     @State var titles: Array<String> = []
     @State var links: Array<String> = []
@@ -46,7 +46,7 @@ struct asuraView: View {
         NavigationView {
             List {
                 Button("view popular things") {
-                    viewModel.getMangaList(from: "https://asura.gg/manga/?page=\(page)") { (value1, value2) in
+                    viewModel.getMangaList(from: "https://asura.nacm.xyz/manga/?page=\(page)") { (value1, value2) in
                         titles = value2
                         links = value1
                         changed = true
@@ -68,7 +68,7 @@ struct asuraView: View {
 
 struct listView: View {
     let viewModel: ExtensionsViewModel
-    let model: LibraryViewModel
+    let model: tempModel
     @Binding var titles: Array<String>
     @Binding var links: Array<String>
     @StateObject var sheetManager = SheetMananger()
@@ -94,7 +94,7 @@ struct listView: View {
                 HStack {
                     Button("Back") {
                         page -= 1
-                        viewModel.getMangaList(from: "https://asura.gg/manga/?page=\(page)") { (value1, value2) in
+                        viewModel.getMangaList(from: "https://asura.nacm.xyz/manga/?page=\(page)") { (value1, value2) in
                             titles = value2
                             links = value1
                         }
@@ -102,7 +102,7 @@ struct listView: View {
                     Spacer()
                     Button("Next") {
                         page += 1
-                        viewModel.getMangaList(from: "https://asura.gg/manga/?page=\(page)") { (value1, value2) in
+                        viewModel.getMangaList(from: "https://asura.nacm.xyz/manga/?page=\(page)") { (value1, value2) in
                             titles = value2
                             links = value1
                         }
@@ -119,7 +119,7 @@ struct listView: View {
                 
 struct coverDetailView: View {
     let viewModel: ExtensionsViewModel
-    let model: LibraryViewModel
+    let model: tempModel
     let description: String
     let chapters: Array<String>
     let chapter_numbers: Array<Int>
@@ -138,7 +138,7 @@ struct coverDetailView: View {
                             Button("download") {
                                 viewModel.downloadCover(from: cover, for: title )
                                 viewModel.getChapters(from: chapters[inx]) { value in
-                                    model.addChapter(cover: title, chapter: chapter_numbers[inx], description: description, genre: genre, filename: value)
+                                    model.addStuff(genre: genre, downloaded: true, descri: description, name: title, filename: value, content: "", chapter: chapter_numbers[inx])
                                 }
                             }
                         }

@@ -6,39 +6,63 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct ContentView: View {
+    @Environment(\.managedObjectContext) private var viewContext
+    
    
-    let comic: Model.Comic
-    @ObservedObject var viewModel: LibraryViewModel
+   // private var items: FetchedResults<Item>
+    
+   
+    let comic: Comic
+    @ObservedObject var viewModel: tempModel
     @State private var steadyStateZoomScale: CGFloat = 1
     @GestureState private var gestureZoomScale: CGFloat = 1
     let defaultButtonSize: CGFloat = 20
+    
+//    var body: some View {
+//        NavigationView {
+//            List {
+//                ForEach(cs) { c in
+//                    Text(c.content ?? "")
+//
+//                }
+//
+//            }
+//            .listStyle(PlainListStyle())
+//            .navigationTitle("Fruits")
+//
+//        }
+//    }
     var body: some View {
         VStack(spacing: 0) {
             documentBody
         }.frame(maxHeight: .infinity, alignment: .bottom)
             .onDisappear(perform: {viewModel.choose(comic)})
-        
+
     }
     var documentBody: some View {
-        
-        
         GeometryReader { geo in
             ZStack {
                 ScrollView {
-                    Group { if comic.downloaded == false {
-                        Image(comic.content).resizable()
-                            .aspectRatio(contentMode: .fit)
-                    } else {
-                        ForEach(comic.filename, id: \.self){ filename in
-                            Image(uiImage: viewModel.load(fileName: filename)!).resizable()
+                    if comic.filename != nil && comic.filename!.count > 0{
+                        // if comic.filename != nil && comic.filename!.count > 0 {
+                        Group { if comic.downloaded == false {
+                            Image(comic.content!).resizable()
                                 .aspectRatio(contentMode: .fit)
+                        } else {
+                            //                 Text(comic.description)
+                            
+                            ForEach(Array(comic.filename ?? [""]), id: \.self){ filename in
+                                if let a = viewModel.load(fileName: filename) {
+                                    Image(uiImage: a).resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                }
+                            }
                         }
+                        }.frame(maxWidth: geo.size.width, minHeight: geo.size.height)
                     }
-                    }.frame(maxWidth: geo.size.width, minHeight: geo.size.height)
-                       
-                        
                 } .scaleEffect(zoomScale)
             }.gesture(zoomGesture())
         }
