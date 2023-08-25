@@ -9,6 +9,42 @@ import Foundation
 import UIKit
 
 class ExtensionsViewModel: ObservableObject {
+    
+    @Published var onlineImage: OnlineImage = .none
+    
+    enum OnlineImage {
+        case none
+        case fetching(Int, String)
+        case found
+        case failed(String)
+        
+//        var uiImage: UIImage? {
+//            switch self {
+//            case .found(let uiImage): return uiImage
+//            default: return nil
+//            }
+//        }
+        
+        var urlBeingFetched: (Int, String)? {
+            switch self {
+            case .fetching(let number, let title): return (number, title)
+            default: return nil
+            }
+        }
+        
+        var isFetching: Bool {
+            urlBeingFetched != nil
+        }
+        
+        var failureReason: String? {
+            switch self {
+            case .failed(let reason): return reason
+            default: return nil
+            }
+        }
+    }
+    
+    
     private static func createExtension() -> Extensions {
         Extensions()
     }
@@ -21,23 +57,28 @@ class ExtensionsViewModel: ObservableObject {
         
     }
     
-    func downloadCover(from page: String, for title: String) {
+    func downloadCover(from page: String, for title: String, chapterNumber: Int) {
+      //  dispatchGroup.notify(queue: .main) {
+        self.onlineImage = .fetching(chapterNumber, title)
+      //  }
         extensions.downloadCover(from: page, for: title)
     }
     
-    func getDescription(from path: String, for title: String, completion: @escaping (String, Array<String>, Array<Int>, String, Array<String>) -> Void) {
+    func getDescription(from path: String, for title: String, completion: @escaping (String, Array<String>, Array<Int>, String, Array<String>) ->  Void)  {
         extensions.getDescription(from: path, for: title) {(value, value2, value3, value4, value5) in
             completion(value, value2, value3, value4, value5)
             return
         }
     }
     // completion: @escaping (Array<String>) -> Void
-    func downloadImageFromUrl(from path: String, completion: @escaping (Array<String>) -> Void) {
+    func downloadImageFromUrl(title: String, chapterNumber: Int, from path: String, completion: @escaping (Array<String>) -> Void) {
+        
         extensions.getChapters(from: path) {(value) in
             DispatchQueue.global().async
             {
                 self.progressImgArray.removeAll()
                 let dispatchGroup = DispatchGroup()
+                
                 for page in value  {
                     let url = URL(string:page)
                     let group = DispatchGroup()
@@ -47,7 +88,13 @@ class ExtensionsViewModel: ObservableObject {
                     group.enter()
                     URLSession.shared.dataTask(with: url!, completionHandler: { data, response, error  in
                         
-                        guard let data = data, error == nil else { return }
+                        guard let data = data, error == nil else {
+                            DispatchQueue.main.async() {
+                                self.onlineImage = .failed("Couldn't download Chapter: \(error?.localizedDescription)")
+                            }
+                            return
+                            
+                        }
                         
                         print(response?.suggestedFilename ?? url!.lastPathComponent)
                         print("Download Finished")
@@ -72,7 +119,10 @@ class ExtensionsViewModel: ObservableObject {
                 
                 }
                 dispatchGroup.notify(queue: .main) {
+                    self.onlineImage = .found
+                    // have to think about that when it gets here this array of files is the same one we asked for when we called the async function.
                     completion(self.progressImgArray)
+                    
                 }
             }
         }

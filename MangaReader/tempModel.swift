@@ -16,9 +16,8 @@ class tempModel: ObservableObject {
     @Published var savedCovers: [Cover] = []
     @Published var savedHistory: [History] = []
     var mal: Tracker = Tracker()
-  //  private(set) var timestamps: Dictionary<Int, String>
     init() {
-   //     timestamps = Dictionary<Int, String>()
+   
         fetchCovers()
         fetchFolders()
         addFolder(name: "ALL")
@@ -28,7 +27,7 @@ class tempModel: ObservableObject {
         
         fetchComics()
         fetchHistory()
-     //   timestamps[1] = "aoifjaeoijf"
+    
     }
     
     func fetchHistory() {
@@ -116,9 +115,6 @@ class tempModel: ObservableObject {
     
     
     func save() {
-      //  savedFolders.removeAll()
-       // savedCovers.removeAll()
-       // savedComics.removeAll()
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.manager.save()
             self.fetchFolders()
@@ -178,7 +174,6 @@ class tempModel: ObservableObject {
         newCover.downloaded = downloaded
         newCover.descri = descri
         newCover.cover = name
-      //  newCover.addToFolder(getFolder(name: "ALL") ?? savedFolders[0])
         newCover.folder = getFolder(name: "ALL")
         print("save cover")
         save()
@@ -235,8 +230,6 @@ class tempModel: ObservableObject {
        let df = DateFormatter()
        df.dateFormat = "yyyy-MM-dd HH:mm:ss"
        let dateString = df.string(from: date)
-      // timestamps[Int(comic.id)] = dateString
-      // print(timestamps)
         if let existinghistory = getHistoryByID(id: comic.id) {
             updateHistory(history: existinghistory, newTime: dateString)
         } else {
@@ -264,25 +257,4 @@ class tempModel: ObservableObject {
        }
        return nil
    }
-    
-   //     newCover.addToChapters(chapters)
-//
-//
-//        for cover in savedCovers {
-//            if cover.cover == newCover.cover {
-//                return
-//            }
-//        }
-//
-//
-//    }
-//    func saveCover() {
-//        do {
-//            try manager.context.save()
-//            fetchCovers()
-//        } catch let error {
-//            print("Eror saving, \(error)")
-//        }
-//    }
-//
 }

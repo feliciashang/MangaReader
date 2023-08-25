@@ -54,7 +54,6 @@ struct asuraView: View {
                 }
             }.background (
                 NavigationLink(destination: listView(viewModel: viewModel, model: model, titles: $titles, links: $links, page: $page), isActive: $changed
-                               // Text("click to navigate popular things")
                 ) {
                     EmptyView()
                 }
@@ -73,6 +72,7 @@ struct listView: View {
     @Binding var links: Array<String>
     @StateObject var sheetManager = SheetMananger()
     @Binding var page: Int
+    @State private var showImageFailureAlert = false
     var body: some View {
         NavigationView {
             VStack {
@@ -113,6 +113,20 @@ struct listView: View {
             .sheet(isPresented: $sheetManager.showSheet, content: {
                 coverDetailView(viewModel: viewModel, model: model, description: sheetManager.whichSheet ?? "uhiuhiu", chapters: sheetManager.chapters!, chapter_numbers: sheetManager.chapter_numbers!, cover: sheetManager.cover!, title: sheetManager.title!, genre: sheetManager.genre!)
             })
+            .onChange(of: viewModel.onlineImage.failureReason) { reason in
+                showImageFailureAlert = (reason != nil)
+            }
+            .alert(
+                "Download Chapter",
+                isPresented: $showImageFailureAlert,
+                presenting: viewModel.onlineImage.failureReason,
+                actions: { reason in
+                    Button("OK", role: .cancel) {}
+                },
+                message: {reason in
+                    Text(reason)
+                }
+            )
         }
     }
 }
@@ -126,7 +140,7 @@ struct coverDetailView: View {
     let cover: String
     let title: String
     let genre: Array<String>
-  //  @Binding var temp: Bool
+    @State var running: ExtensionsViewModel.OnlineImage = .none
     var body: some View {
             ScrollView{
                 VStack {
@@ -136,18 +150,24 @@ struct coverDetailView: View {
                         HStack {
                             Text(String(chapter_numbers[inx]))
                             Button("download") {
-                                viewModel.downloadCover(from: cover, for: title )
-                                viewModel.downloadImageFromUrl(from: chapters[inx])  { value in
-                               // if viewModel.progressImgArray.count > 0 {
-                                    
-                        //        viewModel.getChapters(from: chapters[inx]) { value in
+                                viewModel.downloadCover(from: cover, for: title, chapterNumber: inx )
+                                running = viewModel.onlineImage
+                                viewModel.downloadImageFromUrl(title: title, chapterNumber: inx, from: chapters[inx])  { value in
+                            
                                     model.addStuff(genre: genre, downloaded: true, descri: description, name: title, filename: value, content: "", chapter: chapter_numbers[inx])
+                                    
+                                    running = viewModel.onlineImage
+                                }
+                            }
+                            if running.isFetching  || viewModel.onlineImage.isFetching {
+                                if (running.urlBeingFetched ?? viewModel.onlineImage.urlBeingFetched)! == (inx, title){
+                                    ProgressView()
                                 }
                             }
                         }
                     }
-                }
             }
+        }
     }
 }
 
