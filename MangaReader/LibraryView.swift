@@ -138,6 +138,9 @@ struct coverView: View {
     
     func submit() {
         viewModel.addFolder(name: newFolder)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            viewModel.addToFolder(addTo: viewModel.getFolder(name: newFolder )!, cover: viewModel.getCover(name: comic)!)
+        }
       //  folders.append(newFolder)
     }
     
@@ -155,7 +158,7 @@ struct coverView: View {
                     Image(systemName: "plus")
                 }
                 ForEach (viewModel.savedFolders ,id: \.self) { folder in
-                    Button(action: {viewModel.addToFolder(addTo: viewModel.getFolder(name: folder.name ?? "ALL") ?? viewModel.savedFolders[0], cover: viewModel.getCover(name: comic) ?? viewModel.savedCovers[0])}) {
+                    Button(action: { viewModel.addToFolder(addTo: viewModel.getFolder(name: folder.name ?? "ALL") ?? viewModel.savedFolders[0], cover: viewModel.getCover(name: comic) ?? viewModel.savedCovers[0])}) {
                         Text(folder.name ?? "ALL")
                     }
                 }
