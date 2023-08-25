@@ -24,16 +24,20 @@ struct LibraryView: View {
         NavigationView {
             GeometryReader { geo in
             VStack {
-                Tabs(tabs: tabs(), geoWidth: geo.size.width, selectedTab: $selectedTab)
+                Tabs(tabs: tabs(), geoWidth: geo.size.width, selectedTab: $selectedTab).contextMenu() {
+                    deleteContextMenu
+                }
                 TabView(selection: $selectedTab,
                         content: {
                         ScrollView {
                             LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]){
                               //  searchResults(folder: tabs()[selectedTab].title
-                                if tabs().count > 0 && viewModel.savedFolders != [] && searchResults(folder: tabs()[selectedTab].title).count > 0 {
-                                    ForEach(searchResults(folder: tabs()[selectedTab].title), id: \.self) { cover in
-                                        coverView(comic: cover).aspectRatio(2/3, contentMode: .fit)
-                                        
+                                if tabs().count > 0 && viewModel.savedFolders != [] {
+                                    if searchResults(folder: tabs()[selectedTab].title).count > 0 {
+                                        ForEach(searchResults(folder: tabs()[selectedTab].title), id: \.self) { cover in
+                                            coverView(comic: cover).aspectRatio(2/3, contentMode: .fit)
+                                            
+                                        }
                                     }
                                 }
                             }}.tag(0).padding(.horizontal)
@@ -57,6 +61,17 @@ struct LibraryView: View {
         }
     }
     
+    var deleteContextMenu: some View {
+        VStack {
+            Button("Delete") {
+                if let c = viewModel.getFolder(name: tabs()[selectedTab].title) {
+                    viewModel.deleteFolder(folder: c)
+                    selectedTab -= 1
+                }
+                
+            }
+        }
+    }
     
     func searchResults(folder: String) -> [String] {
         var output: [String] = []
@@ -124,17 +139,25 @@ struct coverView: View {
     }
     
     var contextMenu: some View {
-        Section("Add to Folder") {
-            Button(action: {isAdding.toggle()}){
-                Text("New")
-                Image(systemName: "plus")
-            }
-            ForEach (viewModel.savedFolders ,id: \.self) { folder in
-                Button(action: {viewModel.addToFolder(addTo: viewModel.getFolder(name: folder.name ?? "ALL") ?? viewModel.savedFolders[0], cover: viewModel.getCover(name: comic) ?? viewModel.savedCovers[0])}) {
-                    Text(folder.name ?? "ALL")
+        VStack {
+            Button("Delete") {
+                if let c = viewModel.getCover(name: comic) {
+                    viewModel.deleteCovers(cover: c)
                 }
             }
-        }.id(viewModel.savedFolders.count)
+            
+            Section("Add to Folder") {
+                Button(action: {isAdding.toggle()}){
+                    Text("New")
+                    Image(systemName: "plus")
+                }
+                ForEach (viewModel.savedFolders ,id: \.self) { folder in
+                    Button(action: {viewModel.addToFolder(addTo: viewModel.getFolder(name: folder.name ?? "ALL") ?? viewModel.savedFolders[0], cover: viewModel.getCover(name: comic) ?? viewModel.savedCovers[0])}) {
+                        Text(folder.name ?? "ALL")
+                    }
+                }
+            }.id(viewModel.savedFolders.count)
+        }
     }
 }
 

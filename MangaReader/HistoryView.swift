@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HistoryView: View {
     @EnvironmentObject  var viewModel: tempModel
+    
     var body: some View {
 
         NavigationView {
@@ -22,6 +23,7 @@ struct HistoryView: View {
                         .font(.title)
                 }
             }
+            
         }
     }
 }

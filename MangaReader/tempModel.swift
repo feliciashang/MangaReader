@@ -113,6 +113,11 @@ class tempModel: ObservableObject {
         save()
     }
     
+    func deleteFolder(folder: Folder) {
+        let folderToDelete = folder
+        manager.context.delete(folderToDelete)
+        save()
+    }
     
     func save() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
@@ -199,6 +204,11 @@ class tempModel: ObservableObject {
         return nil
     }
     
+    func deleteCovers(cover: Cover) {
+        let coverToDelete = cover
+        manager.context.delete(coverToDelete)
+        save()
+    }
     func getCover(name: String) -> Cover? {
         for cover in savedCovers {
             if cover.cover == name {

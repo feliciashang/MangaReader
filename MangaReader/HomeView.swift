@@ -9,7 +9,6 @@ import SwiftUI
 
 struct HomeView: View {
     @State var selectedView: Int = 1
-    
     @StateObject var viewModel: tempModel = tempModel()
     @ObservedObject var folderViewModel = FolderViewModel()
     
@@ -32,6 +31,7 @@ struct HomeView: View {
                         Text("History")
                         Image(systemName: "clock")
                     }
+                    
                 NavigationView {
                     List {
                         NavigationLink(destination: MoreView().environmentObject(viewModel)) {

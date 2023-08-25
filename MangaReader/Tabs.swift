@@ -65,6 +65,7 @@ struct Tabs: View {
         .onDisappear(perform: {
             UIScrollView.appearance().bounces = true
         })
+        
     }
 }
 struct Tabs_Previews: PreviewProvider {
