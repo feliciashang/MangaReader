@@ -11,6 +11,7 @@ struct LibraryView: View {
     @EnvironmentObject  var viewModel: tempModel
     @State private var searchText = ""
     @State private var selectedTab: Int = 0
+    @State private var folderDeleteAlert = false
  //   @State var folders: [String] = ["ALL"]
     
     func tabs() -> [Tab]{
@@ -27,6 +28,13 @@ struct LibraryView: View {
                 Tabs(tabs: tabs(), geoWidth: geo.size.width, selectedTab: $selectedTab).contextMenu() {
                     deleteContextMenu
                 }
+                .alert(
+                    "Cannot delete All Folder",
+                    isPresented: $folderDeleteAlert,
+                    actions: {
+                        Button("OK", role: .cancel) {}
+                    }
+                )
                 TabView(selection: $selectedTab,
                         content: {
                         ScrollView {
@@ -64,7 +72,10 @@ struct LibraryView: View {
     var deleteContextMenu: some View {
         VStack {
             Button("Delete") {
-                if let c = viewModel.getFolder(name: tabs()[selectedTab].title) {
+                if selectedTab == 0 {
+                    folderDeleteAlert = true
+                }
+                else if let c = viewModel.getFolder(name: tabs()[selectedTab].title) {
                     viewModel.deleteFolder(folder: c)
                     selectedTab -= 1
                 }
@@ -72,6 +83,8 @@ struct LibraryView: View {
             }
         }
     }
+    
+    
     
     func searchResults(folder: String) -> [String] {
         var output: [String] = []
@@ -141,7 +154,6 @@ struct coverView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             viewModel.addToFolder(addTo: viewModel.getFolder(name: newFolder )!, cover: viewModel.getCover(name: comic)!)
         }
-      //  folders.append(newFolder)
     }
     
     var contextMenu: some View {
