@@ -69,9 +69,9 @@ class LibraryViewModel: ObservableObject {
         return model.savedFolders
     }
     
-    func addTracker(name: String) {
-        model.addTracker(name: name)
-    }
+//    func addTracker(name: String) {
+//        model.addTracker(name: name)
+//    }
     
     func addFolder(add_to_folder folder: String) {
         model.addFolder(name: folder)

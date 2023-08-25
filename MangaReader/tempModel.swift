@@ -250,8 +250,14 @@ class tempModel: ObservableObject {
         mal.updateManga(name: (comic.cover?.cover)!, chapter: Int(comic.chapter))
    }
     
-   func addTracker(name: String) {
-       mal.addManga(name: name)
+    func addTracker(name: String, completion: @escaping(Bool) -> ()) {
+        mal.addManga(name: name) { (value) in
+            if value == true {
+                completion(value)
+            } else {
+                completion(false)
+            }
+        }
    }
    private func getDocumentsDirectory() -> URL {
           let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)

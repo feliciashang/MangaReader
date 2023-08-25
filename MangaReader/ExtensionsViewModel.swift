@@ -86,35 +86,37 @@ class ExtensionsViewModel: ObservableObject {
                     print(url)
                     print("-------GROUP ENTER-------")
                     group.enter()
-                    URLSession.shared.dataTask(with: url!, completionHandler: { data, response, error  in
-                        
-                        guard let data = data, error == nil else {
-                            DispatchQueue.main.async() {
-                                self.onlineImage = .failed("Couldn't download Chapter: \(error?.localizedDescription)")
-                            }
-                            return
+                    if url != nil {
+                        URLSession.shared.dataTask(with: url!, completionHandler: { data, response, error  in
                             
-                        }
-                        
-                        print(response?.suggestedFilename ?? url!.lastPathComponent)
-                        print("Download Finished")
-                        do {
-                            try data.write(to: self.extensions.getDocumentsDirectory().appendingPathComponent(response?.suggestedFilename ?? url!.lastPathComponent))
-                            print("Image saved to: ",self.extensions.getDocumentsDirectory())
-                        } catch {
-                            print(error)
-                        }
-                        let lastComponent = page.components(separatedBy: "/").last ?? "cdc"
-                        if lastComponent != "ENDING-PAGE.jpg" {
-                            print("outside")
-                            DispatchQueue.main.async() {
-                                print("isnde")
-                                self.progressImgArray.append(lastComponent)
+                            guard let data = data, error == nil else {
+                                DispatchQueue.main.async() {
+                                    self.onlineImage = .failed("Couldn't download Chapter: \(error?.localizedDescription)")
+                                }
+                                return
                                 
                             }
-                        }
-                        group.leave()
-                    }).resume()
+                            
+                            print(response?.suggestedFilename ?? url!.lastPathComponent)
+                            print("Download Finished")
+                            do {
+                                try data.write(to: self.extensions.getDocumentsDirectory().appendingPathComponent(response?.suggestedFilename ?? url!.lastPathComponent))
+                                print("Image saved to: ",self.extensions.getDocumentsDirectory())
+                            } catch {
+                                print(error)
+                            }
+                            let lastComponent = page.components(separatedBy: "/").last ?? "cdc"
+                            if lastComponent != "ENDING-PAGE.jpg" {
+                                print("outside")
+                                DispatchQueue.main.async() {
+                                    print("isnde")
+                                    self.progressImgArray.append(lastComponent)
+                                    
+                                }
+                            }
+                            group.leave()
+                        }).resume()
+                    }
                     group.wait()
                 
                 }

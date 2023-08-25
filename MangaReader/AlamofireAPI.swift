@@ -121,7 +121,7 @@ class AlamofireAPI
         }
     }
     
-    func findID(original_name: String, name: String, completion: @escaping (Int) -> Void) {
+    func findID(original_name: String, name: String, completion: @escaping (Int?) -> Void) {
         let path: String = "https://api.myanimelist.net/v2/manga?q=\(name)"
         var id = 0
         if let token = self.OAuthToken {
@@ -134,14 +134,24 @@ class AlamofireAPI
                     let data = JSON(value)
                    // id = data["data"][0]["node"]["id"].int!
                     if let items = data["data"].array {
+                        print("this")
                         for i in items {
+                            print("that")
                             if i["node"]["title"].string == original_name {
                                 id = i["node"]["id"].int!
                                 print("hiiii")
                                 print(id)
-                                completion(id)
+                                
+                            } else {
+                                print("complete here")
+                                
                             }
                         }
+                    }
+                    if id == 0{
+                        completion(nil)
+                    } else {
+                        completion(id)
                     }
                     //return id
                    // self.OAuthToken = token["access_token"].string

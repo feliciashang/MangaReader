@@ -14,6 +14,7 @@ struct ComicDetailView: View {
     @ObservedObject var viewModel: tempModel
     //var mal: Tracker = Tracker()
     let cornerRadiusCard: CGFloat = 20
+    @State private var trackerAlert = false
     var body: some View {
         VStack(alignment: .leading) {
             Text(comic.cover!)
@@ -42,7 +43,14 @@ struct ComicDetailView: View {
                 }
             } .padding(.horizontal)
             HStack {
-                Button(action: {viewModel.addTracker(name: comic.cover!) }){
+                Button(action: {
+                    viewModel.addTracker(name: comic.cover!) { (value) in
+                        if value == false {
+                            trackerAlert = true
+                        }
+                    }
+                    
+                }){
                     Label("Tracking", systemImage:"plus")
                 }
             }
@@ -54,6 +62,13 @@ struct ComicDetailView: View {
                 }
             }
         }
+        .alert(
+            "Cannot find Comic on MAL",
+            isPresented: $trackerAlert,
+            actions: {
+                Button("OK", role: .cancel) {}
+            }
+        )
     }
 }
 struct genreView: View {

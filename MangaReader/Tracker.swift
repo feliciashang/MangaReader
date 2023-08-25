@@ -22,10 +22,11 @@ class Tracker {
     }
     func updateManga(name: String, chapter: Int) {
         print(trackers)
-        let id = trackers[name] ?? 2
-        AlamofireAPI.shared.updateList(id: id, chapters: chapter)
+        if let id = trackers[name] {
+            AlamofireAPI.shared.updateList(id: id, chapters: chapter)
+        }
     }
-    func addManga(name: String) {
+    func addManga(name: String, completion: @escaping(Bool) -> ()) {
         var new_name: String = ""
         for i in name {
             if i == " "{
@@ -36,8 +37,16 @@ class Tracker {
         }
         print(new_name)
         AlamofireAPI.shared.findID(original_name: name, name: new_name) { (id) in
-            self.trackers[name] = id
-            print(self.trackers)
+            if id != nil {
+                print(id)
+                self.trackers[name] = id
+                print(self.trackers)
+                completion(true)
+            } else {
+                print("pirjfaoifjaoifjoijoijoaijoij")
+                completion(false)
+            }
         }
+        
     }
 }

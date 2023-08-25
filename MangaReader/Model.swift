@@ -224,9 +224,9 @@ class Model {
          mal.updateManga(name: (comic.cover?.cover)!, chapter: Int(comic.chapter))
         
     }
-    func addTracker(name: String) {
-        mal.addManga(name: name)
-    }
+//    func addTracker(name: String) {
+//        mal.addManga(name: name)
+//    }
     private func getDocumentsDirectory() -> URL {
            let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
            
