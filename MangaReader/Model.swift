@@ -134,7 +134,7 @@ class Model {
         newCover.downloaded = downloaded
         newCover.descri = descri
         newCover.cover = cover
-        newCover.folder = folder
+     //   newCover.folder = folder
    //     newCover.addToChapters(chapters)
         
         

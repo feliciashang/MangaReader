@@ -174,7 +174,9 @@ class tempModel: ObservableObject {
         newCover.downloaded = downloaded
         newCover.descri = descri
         newCover.cover = name
-        newCover.folder = getFolder(name: "ALL")
+        if savedFolders.count > 0 {
+            newCover.addToFolder(getFolder(name: "ALL") ?? savedFolders[0])
+        }
         print("save cover")
         save()
         print(savedCovers)
