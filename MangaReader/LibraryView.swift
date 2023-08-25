@@ -75,16 +75,19 @@ struct LibraryView: View {
     
     func searchResults(folder: String) -> [String] {
         var output: [String] = []
+        let covers  =  viewModel.getCoverfromFolder(folder: folder)
+           for cov in covers {
+               output.append(cov.cover!)
+           }
         if searchText.isEmpty {
-             let covers  =  viewModel.getCoverfromFolder(folder: folder)
-                for cov in covers {
-                    output.append(cov.cover!)
-                }
-          
             return output
+        } else {
+            return output.filter {
+                $0.range(of: searchText, options: .caseInsensitive) != nil
+            }
             
         }
-        return output
+        
 //            } else {
 //
 //                return viewModel.folders[folder]!.filter {
