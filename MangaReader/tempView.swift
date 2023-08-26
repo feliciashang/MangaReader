@@ -11,7 +11,7 @@ import SwiftUI
 struct tempView: View {
     
     //  private var items: FetchedResults<Item>
-    @StateObject var vm = tempModel()
+    @StateObject var vm = MangaViewModel()
     
     var body: some View {
         NavigationView {

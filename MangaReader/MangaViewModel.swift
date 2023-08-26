@@ -9,8 +9,8 @@ import Foundation
 import UIKit
 import CoreData
 
-class tempModel: ObservableObject {
-    let manager = temp.instance
+class MangaViewModel: ObservableObject {
+    let manager = Model.instance
     @Published var savedComics: [Comic] = []
     @Published var savedFolders: [Folder] = []
     @Published var savedCovers: [Cover] = []
@@ -21,9 +21,9 @@ class tempModel: ObservableObject {
         fetchCovers()
         fetchFolders()
         addFolder(name: "ALL")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.addStuff(genre: ["Adventure"], downloaded: false, descri: "fefefef", name: "Ending Maker", filename: [], content: "endingmaker_3", chapter: 1)
-        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+//            self.addStuff(genre: ["Adventure"], downloaded: false, descri: "fefefef", name: "Ending Maker", filename: [], content: "endingmaker_3", chapter: 1)
+//        }
         
         fetchComics()
         fetchHistory()
@@ -166,7 +166,7 @@ class tempModel: ObservableObject {
             print("Error fetching. \(error)")
         }
     }
-//
+
     func addCovers(genre: [String], downloaded: Bool, descri: String, name: String) {
         for cover in savedCovers {
             if cover.cover == name {

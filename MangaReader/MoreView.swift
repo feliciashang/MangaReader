@@ -17,7 +17,7 @@ class SheetMananger: ObservableObject{
     @Published var genre: Array<String>? = nil
 }
 struct MoreView: View {
-    @EnvironmentObject  var viewModel: tempModel
+    @EnvironmentObject  var viewModel: MangaViewModel
     @ObservedObject var extensionsViewModel = ExtensionsViewModel()
     var body: some View {
         NavigationView {
@@ -37,7 +37,7 @@ struct MoreView: View {
 
 struct asuraView: View {
     let viewModel: ExtensionsViewModel
-    let model: tempModel
+    let model: MangaViewModel
     @State var changed: Bool = false
     @State var titles: Array<String> = []
     @State var links: Array<String> = []
@@ -67,7 +67,7 @@ struct asuraView: View {
 
 struct listView: View {
     let viewModel: ExtensionsViewModel
-    let model: tempModel
+    let model: MangaViewModel
     @Binding var titles: Array<String>
     @Binding var links: Array<String>
     @StateObject var sheetManager = SheetMananger()
@@ -111,7 +111,7 @@ struct listView: View {
             }
             
             .sheet(isPresented: $sheetManager.showSheet, content: {
-                coverDetailView(viewModel: viewModel, model: model, description: sheetManager.whichSheet ?? "uhiuhiu", chapters: sheetManager.chapters!, chapter_numbers: sheetManager.chapter_numbers!, cover: sheetManager.cover!, title: sheetManager.title!, genre: sheetManager.genre!)
+                coverDetailView(viewModel: viewModel, model: model, description: sheetManager.whichSheet ?? "Error", chapters: sheetManager.chapters ?? [""], chapter_numbers: sheetManager.chapter_numbers ?? [], cover: sheetManager.cover ?? "", title: sheetManager.title ?? "", genre: sheetManager.genre ?? [""])
             })
             .onChange(of: viewModel.onlineImage.failureReason) { reason in
                 showImageFailureAlert = (reason != nil)
@@ -133,7 +133,7 @@ struct listView: View {
                 
 struct coverDetailView: View {
     let viewModel: ExtensionsViewModel
-    let model: tempModel
+    let model: MangaViewModel
     let description: String
     let chapters: Array<String>
     let chapter_numbers: Array<Int>
@@ -160,8 +160,10 @@ struct coverDetailView: View {
                                 }
                             }
                             if running.isFetching  || viewModel.onlineImage.isFetching {
-                                if (running.urlBeingFetched ?? viewModel.onlineImage.urlBeingFetched)! == (inx, title){
-                                    ProgressView()
+                                if let a = running.urlBeingFetched ?? viewModel.onlineImage.urlBeingFetched {
+                                    if a == (inx, title){
+                                        ProgressView()
+                                    }
                                 }
                             }
                         }

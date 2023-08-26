@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HistoryView: View {
-    @EnvironmentObject  var viewModel: tempModel
+    @EnvironmentObject  var viewModel: MangaViewModel
     
     var body: some View {
 
@@ -29,7 +29,7 @@ struct HistoryView: View {
 }
 
 struct timeView: View {
-    var viewModel: tempModel
+    var viewModel: MangaViewModel
     var history: History
 
     var body: some View {

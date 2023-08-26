@@ -18,13 +18,6 @@ class ExtensionsViewModel: ObservableObject {
         case found
         case failed(String)
         
-//        var uiImage: UIImage? {
-//            switch self {
-//            case .found(let uiImage): return uiImage
-//            default: return nil
-//            }
-//        }
-        
         var urlBeingFetched: (Int, String)? {
             switch self {
             case .fetching(let number, let title): return (number, title)

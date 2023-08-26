@@ -11,7 +11,7 @@ import SwiftyJSON
 
 class AlamofireAPI
 {
-    
+    @Published var tracking: Tracking = .none
     static let shared = AlamofireAPI()
     func alamofireManager() -> Session
     {
@@ -160,12 +160,24 @@ class AlamofireAPI
                     
                 }
             }
+        } else {
+            tracking = .failed("Error! Need to sign in to MAL")
         }
        
     }
 }
         
+enum Tracking {
+    case none
+    case failed(String)
     
+    var failureReason: String? {
+        switch self {
+        case .failed(let reason): return reason
+        default: return nil
+        }
+    }
+}
     
 
 

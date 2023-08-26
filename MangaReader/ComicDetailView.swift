@@ -11,7 +11,7 @@ import SwiftUI
 struct ComicDetailView: View {
     var comic: Cover
     @State var isViewed = false
-    @ObservedObject var viewModel: tempModel
+    @ObservedObject var viewModel: MangaViewModel
     //var mal: Tracker = Tracker()
     let cornerRadiusCard: CGFloat = 20
     @State private var trackerAlert = false
@@ -82,7 +82,7 @@ struct genreView: View {
     }
 }
 struct chapterView: View {
-    let viewModel: tempModel
+    let viewModel: MangaViewModel
     let chapter: Comic
     var body: some View {
         NavigationLink(destination: ContentView(comic: chapter, viewModel: viewModel), label: {

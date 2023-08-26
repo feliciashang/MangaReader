@@ -20,8 +20,8 @@ struct FolderModel {
         folders[folder] = Array<String>()
     }
     mutating func addComic(new_comic comic: String, add_to_folder folder: String) {
-        if (folders[folder] != nil) {
-            folders[folder]!.append(comic)
+        if var f = folders[folder] {
+            f.append(comic)
         }
         print(folders)
     }

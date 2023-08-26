@@ -16,7 +16,7 @@ struct ContentView: View {
     
    
     let comic: Comic
-    @ObservedObject var viewModel: tempModel
+    @ObservedObject var viewModel: MangaViewModel
     @State private var steadyStateZoomScale: CGFloat = 1
     @GestureState private var gestureZoomScale: CGFloat = 1
     let defaultButtonSize: CGFloat = 20

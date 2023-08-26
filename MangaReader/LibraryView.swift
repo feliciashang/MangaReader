@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LibraryView: View {
-    @EnvironmentObject  var viewModel: tempModel
+    @EnvironmentObject  var viewModel: MangaViewModel
     @State private var searchText = ""
     @State private var selectedTab: Int = 0
     @State private var folderDeleteAlert = false
@@ -111,7 +111,7 @@ struct LibraryView: View {
 }
 
 struct coverView: View {
-    @EnvironmentObject  var viewModel: tempModel
+    @EnvironmentObject  var viewModel: MangaViewModel
     let comic: String
     @State var isAdding = false
     @State var newFolder: String = ""
@@ -152,7 +152,11 @@ struct coverView: View {
     func submit() {
         viewModel.addFolder(name: newFolder)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            viewModel.addToFolder(addTo: viewModel.getFolder(name: newFolder )!, cover: viewModel.getCover(name: comic)!)
+            if let f = viewModel.getFolder(name: newFolder) {
+                if let k = viewModel.getCover(name: comic) {
+                    viewModel.addToFolder(addTo: f, cover: k)
+                }
+            }
         }
     }
     
@@ -183,7 +187,7 @@ struct coverView: View {
 
 struct LibraryView_Previews: PreviewProvider {
     static var previews: some View {
-        @State var library = LibraryViewModel()
+        
         return LibraryView()
     }
 }
