@@ -11,7 +11,7 @@ import SwiftyJSON
 
 class AlamofireAPI
 {
-    @Published var tracking: Tracking = .none
+    
     static let shared = AlamofireAPI()
     func alamofireManager() -> Session
     {
@@ -121,10 +121,12 @@ class AlamofireAPI
         }
     }
     
-    func findID(original_name: String, name: String, completion: @escaping (Int?) -> Void) {
+    func findID(original_name: String, name: String, completion: @escaping (Int?) -> Void) throws {
+        print("starting to find ID")
         let path: String = "https://api.myanimelist.net/v2/manga?q=\(name)"
         var id = 0
         if let token = self.OAuthToken {
+            
             let header:HTTPHeaders = ["Authorization": "Bearer \(token)"]
             AF.request(path, method: .get, headers: header).responseData {
                 response in
@@ -161,22 +163,15 @@ class AlamofireAPI
                 }
             }
         } else {
-            tracking = .failed("Error! Need to sign in to MAL")
+            throw TrackingError.notSignedIn
         }
        
     }
 }
         
-enum Tracking {
-    case none
-    case failed(String)
+enum TrackingError: Error {
+    case notSignedIn
     
-    var failureReason: String? {
-        switch self {
-        case .failed(let reason): return reason
-        default: return nil
-        }
-    }
 }
     
 

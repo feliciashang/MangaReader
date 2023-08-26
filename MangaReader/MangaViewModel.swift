@@ -250,8 +250,8 @@ class MangaViewModel: ObservableObject {
         mal.updateManga(name: (comic.cover?.cover)!, chapter: Int(comic.chapter))
    }
     
-    func addTracker(name: String, completion: @escaping(Bool) -> ()) {
-        mal.addManga(name: name) { (value) in
+    func addTracker(name: String, completion: @escaping(Bool) -> ()) throws {
+        try mal.addManga(name: name) {(value) in
             if value == true {
                 completion(value)
             } else {
@@ -259,6 +259,7 @@ class MangaViewModel: ObservableObject {
             }
         }
    }
+    
    private func getDocumentsDirectory() -> URL {
           let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
           
