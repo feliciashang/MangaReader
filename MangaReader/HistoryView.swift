@@ -36,9 +36,11 @@ struct timeView: View {
         NavigationLink(destination: ContentView(comic: viewModel.getComicfromID(id: Int(history.id)), viewModel: viewModel), label: {
             Text(history.time ?? " ")
             Text("Chapter: \(viewModel.getComicfromID(id: Int(history.id)).chapter)")
-            Image((viewModel.getComicfromID(id: Int(history.id)).cover?.cover)!)
+            if let b = viewModel.load(fileName: viewModel.getComicfromID(id: Int(history.id)).cover!.cover! + ".jpg" ){
+                Image(uiImage: b)
                     .resizable()
                     .frame(maxWidth: 30, maxHeight: 45)
+            }
 
             })
 

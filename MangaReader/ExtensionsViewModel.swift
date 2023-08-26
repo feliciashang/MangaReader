@@ -117,6 +117,13 @@ class ExtensionsViewModel: ObservableObject {
                             group.leave()
                         }).resume()
                     }
+//                    } else {
+//                        DispatchQueue.main.async() {
+//                            print("url problem")
+//                            self.onlineImage = .failed("Problem with Image URL, cannot download")
+//                        }
+//                        return
+//                    }
                     group.wait()
                 
                 }
